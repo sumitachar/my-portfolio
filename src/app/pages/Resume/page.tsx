@@ -1,7 +1,6 @@
 "use client";
 import React, { useRef } from "react";
 import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
 
 const ResumePage: React.FC = () => {
   const resumeRef = useRef<HTMLDivElement>(null);
