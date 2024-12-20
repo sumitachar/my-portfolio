@@ -1,8 +1,9 @@
-"use client"
+"use client";  // Add this line
+import Image from 'next/image';
 import React, { useState } from 'react';
 
 const ProjectsSection: React.FC = () => {
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null); // Track which project description is expanded
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
   const projects = [
     {
@@ -29,7 +30,7 @@ const ProjectsSection: React.FC = () => {
   ];
 
   const handleToggleDescription = (index: number) => {
-    setExpandedIndex(expandedIndex === index ? null : index); // Toggle description visibility
+    setExpandedIndex(expandedIndex === index ? null : index);
   };
 
   return (
@@ -46,9 +47,11 @@ const ProjectsSection: React.FC = () => {
             <div className="card bg-gray-800 shadow-lg rounded-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl hover:ring-2 hover:ring-indigo-600 hover:border-2 hover:border-indigo-500">
               <div className="relative">
                 {/* Image */}
-                <img
+                <Image
                   src={project.imageSrc}
                   alt={project.title}
+                  width={500} // Add width and height for optimization
+                  height={300}
                   className="w-full h-56 object-cover transition-transform duration-300 transform hover:scale-110"
                 />
                 {/* Dark Gradient Hover Effect */}
@@ -59,11 +62,11 @@ const ProjectsSection: React.FC = () => {
                 <h2 className="text-xl font-semibold text-white">{project.title}</h2>
                 {/* Short Description */}
                 <p className="text-sm text-gray-400">{project.description}</p>
-                {/* Show Full Description Button */}
+                {/* Full Description */}
                 {expandedIndex === index ? (
                   <p className="text-sm text-gray-300 mt-4">{project.fullDescription}</p>
                 ) : null}
-                {/* Button */}
+                {/* View Project Button */}
                 <a
                   href={project.link}
                   target="_blank"

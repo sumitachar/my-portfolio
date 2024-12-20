@@ -1,3 +1,4 @@
+"use client";  // Add this line
 import React from 'react';
 import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaFileDownload } from 'react-icons/fa';
 

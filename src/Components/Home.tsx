@@ -1,4 +1,6 @@
+"use client";  // Add this line
 import React from "react";
+import Image from 'next/image';
 
 const Home: React.FC = () => {
     return (
@@ -10,10 +12,12 @@ const Home: React.FC = () => {
                 {/* Left Section: Profile Image with Animation */}
                 <div className="flex-1 flex items-center justify-center relative">
                     <div className="relative z-10">
-                        <img
+                        <Image
                             src="/bg3.JPG"
                             alt="Profile"
-                            className="w-60 h-60 sm:w-72 sm:h-72 md:w-80 md:h-80 rounded-full object-cover shadow-2xl border-4 border-green-400"
+                            width={320}  // Set appropriate width
+                            height={320} // Set appropriate height
+                            className="rounded-full shadow-2xl border-4 border-green-400"
                         />
                     </div>
                     {/* Animated Circles */}
@@ -26,7 +30,8 @@ const Home: React.FC = () => {
                 {/* Right Section: Introduction */}
                 <div className="flex-1 text-center md:text-left">
                     <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                        Hello, I'm{" "}
+                        <p>Hello, I&apos;</p>
+
                         <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500">
                             Sumit Achar
                         </span>

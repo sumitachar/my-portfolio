@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Image from 'next/image';
 
 const AboutPage: React.FC = () => {
   const skills = [
@@ -72,10 +73,12 @@ const AboutPage: React.FC = () => {
         <div className="space-y-8">
           {/* Profile Image and Info */}
           <div className="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8 opacity-0 animate-fadeInUp delay-1000">
-            <img
+            <Image
               src="/bg3.JPG"
               alt="Profile"
-              className="w-32 h-32 rounded-full shadow-lg border-4 border-white transition-transform transform hover:scale-110"
+              width={120}  // Set appropriate width
+              height={120}
+              className="rounded-full shadow-lg border-4 border-white transition-transform transform hover:scale-110"
             />
             <div>
               <p className="text-lg font-semibold">Name: Sumit Achar</p>
