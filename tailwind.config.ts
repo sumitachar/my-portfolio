@@ -5,6 +5,8 @@ export default {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    './pages/**/*.{js,ts,jsx,tsx}',
+    './components/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {
@@ -12,6 +14,12 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
         'indigo-600': '#4f46e5',
+        green: {
+          400: '#32CD32',
+        },
+        blue: {
+          500: '#1E90FF',
+        },
       },
       animation: {
         fadeInUp: 'fadeInUp 1s ease-out forwards',
@@ -29,6 +37,7 @@ export default {
         'transform': 'transform',
         'box-shadow': 'box-shadow',
       },
+      
     },
   },
   plugins: [],
