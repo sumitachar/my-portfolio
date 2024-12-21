@@ -34,7 +34,7 @@ const Navbar: React.FC = () => {
         </button>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex gap-8">
+        <div className={`hidden md:flex gap-8`}>
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -48,7 +48,7 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Menu (Dropdown) */}
+      {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden bg-gray-800 border-t border-gray-700">
           <ul className="flex flex-col items-start px-6 py-4 gap-4">
@@ -68,6 +68,7 @@ const Navbar: React.FC = () => {
         </div>
       )}
     </nav>
+
   );
 };
 
