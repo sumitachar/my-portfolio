@@ -39,7 +39,7 @@ const Navbar: React.FC = () => {
         </button>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex gap-10">
+        <div className={`hidden md:flex gap-10`}>
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -73,6 +73,7 @@ const Navbar: React.FC = () => {
         </div>
       )}
     </nav>
+
   );
 };
 
