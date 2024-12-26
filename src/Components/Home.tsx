@@ -30,7 +30,7 @@ const Home: React.FC = () => {
                 {/* Right Section: Introduction */}
                 <div className="flex-1 text-center md:text-left">
                     <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                        <p>Hello, I&apos;</p>
+                        <p>Hello, I&apos;m</p>
 
                         <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500">
                             Sumit Achar

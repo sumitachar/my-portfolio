@@ -66,7 +66,7 @@ const ContactPage: React.FC = () => {
           <div className="text-center">
             <h2 className="text-2xl font-semibold">
               Have a <span className="text-indigo-400">Question?</span>{' '}
-              <a href="https://forms.gle/F9Udn855qkAcBo4p9" className="py-3 px-5 bg-indigo-500 text-white rounded-lg mt-4 inline-block hover:bg-indigo-600 transition-all duration-300">
+              <a href="https://docs.google.com/forms/d/e/1FAIpQLSeLd2Y7LGGcyvoILAOazklgv1QPGPyZEhQb7UJEO4m7mZ_W3w/viewform?usp=sharing" className="py-3 px-5 bg-indigo-500 text-white rounded-lg mt-4 inline-block hover:bg-indigo-600 transition-all duration-300">
                 Click Here
               </a>
             </h2>
