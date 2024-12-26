@@ -51,8 +51,8 @@ const ContactPage: React.FC = () => {
             <p className="text-gray-300">
               {/* The resume link */}
               <a 
-                href="/resume.pdf" 
-                download 
+                href="https://drive.google.com/file/d/15RD031vFceg8q8o1xytDcFHpStiBhcW_/view?usp=drive_link" 
+                // download 
                 className="hover:text-indigo-400 transition-all duration-300"
               >
                 Resume Link

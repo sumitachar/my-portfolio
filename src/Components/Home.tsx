@@ -42,13 +42,13 @@ const Home: React.FC = () => {
                     </p>
                     <div className="flex flex-wrap justify-center md:justify-start gap-4">
                         <a
-                            href="https://github.com/sumitachar"
+                            href="https://github.com/sumitachar/my-portfolio"
                             className="px-6 py-3 bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold rounded-lg shadow-lg hover:opacity-90 transition"
                         >
                             My Portfolio
                         </a>
                         <a
-                            href="#contact"
+                            href="/pages/Contact"
                             className="px-6 py-3 border-2 border-green-400 text-green-400 font-bold rounded-lg hover:bg-green-400 hover:text-white transition"
                         >
                             Contact Me

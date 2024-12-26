@@ -3,120 +3,120 @@ import React, { useRef } from "react";
 import jsPDF from "jspdf";
 
 const ResumePage: React.FC = () => {
-  const resumeRef = useRef<HTMLDivElement>(null);
+  // const resumeRef = useRef<HTMLDivElement>(null);
 
-  const handleDownloadPDF = () => {
-    const pdf = new jsPDF("p", "mm", "a4"); // Portrait, mm units, A4 size
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
+//   const handleDownloadPDF = () => {
+//     const pdf = new jsPDF("p", "mm", "a4"); // Portrait, mm units, A4 size
+//     const pageWidth = pdf.internal.pageSize.getWidth();
+//     const pageHeight = pdf.internal.pageSize.getHeight();
 
-    const margin = 10;
-    let yOffset = 20; // Initial vertical position for the content
+//     const margin = 10;
+//     let yOffset = 20; // Initial vertical position for the content
 
-    // Helper function to check if content exceeds the current page height
-    const checkPageOverflow = (textHeight: number) => {
-        if (yOffset + textHeight > pageHeight - margin) {
-            pdf.addPage();
-            yOffset = 20; // Reset Y offset for the new page
-        }
-    };
+//     // Helper function to check if content exceeds the current page height
+//     const checkPageOverflow = (textHeight: number) => {
+//         if (yOffset + textHeight > pageHeight - margin) {
+//             pdf.addPage();
+//             yOffset = 20; // Reset Y offset for the new page
+//         }
+//     };
 
-    // --- Title ---
-    pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(26);
-    pdf.text("Sumit Achar", pageWidth / 2, yOffset, { align: "center" });
-    yOffset += 10;
+//     // --- Title ---
+//     pdf.setFont("helvetica", "bold");
+//     pdf.setFontSize(26);
+//     pdf.text("Sumit Achar", pageWidth / 2, yOffset, { align: "center" });
+//     yOffset += 10;
 
-    pdf.setFontSize(14);
-    pdf.text("Front-End Developer", pageWidth / 2, yOffset, { align: "center" });
-    yOffset += 5; // Space after title
+//     pdf.setFontSize(14);
+//     pdf.text("Front-End Developer", pageWidth / 2, yOffset, { align: "center" });
+//     yOffset += 5; // Space after title
 
-    // --- Separator Line ---
-    pdf.setDrawColor(0, 0, 0);
-    pdf.line(margin, yOffset, pageWidth - margin, yOffset);
-    yOffset += 10;
+//     // --- Separator Line ---
+//     pdf.setDrawColor(0, 0, 0);
+//     pdf.line(margin, yOffset, pageWidth - margin, yOffset);
+//     yOffset += 10;
 
-    // --- Contact Information ---
-    pdf.setFontSize(14);
-    pdf.text("Contact Information", margin, yOffset);
-    yOffset += 10;
+//     // --- Contact Information ---
+//     pdf.setFontSize(14);
+//     pdf.text("Contact Information", margin, yOffset);
+//     yOffset += 10;
 
-    const contactInfo = `Email: sumitachar1997@gmail.com\nPhone: 8348580207\nLinkedIn: linkedin.com/in/sumitachar\nGitHub: github.com/sumitachar`;
-    checkPageOverflow(pdf.getTextDimensions(contactInfo).h);
-    pdf.setFontSize(12);
-    pdf.text(contactInfo, margin, yOffset, { maxWidth: pageWidth - 2 * margin });
-    yOffset += pdf.getTextDimensions(contactInfo).h + 20;
+//     const contactInfo = `Email: sumitachar1997@gmail.com\nPhone: 8348580207\nLinkedIn: linkedin.com/in/sumitachar\nGitHub: github.com/sumitachar`;
+//     checkPageOverflow(pdf.getTextDimensions(contactInfo).h);
+//     pdf.setFontSize(12);
+//     pdf.text(contactInfo, margin, yOffset, { maxWidth: pageWidth - 2 * margin });
+//     yOffset += pdf.getTextDimensions(contactInfo).h + 20;
 
-    // --- Summary ---
-    pdf.setFontSize(14);
-    pdf.text("Summary", margin, yOffset);
-    yOffset += 10;
-    const summary = "Passionate about creating interactive web applications and constantly improving skills in front-end development.";
-    checkPageOverflow(pdf.getTextDimensions(summary).h);
-    pdf.setFontSize(12);
-    pdf.text(summary, margin, yOffset, { maxWidth: pageWidth - 2 * margin });
-    yOffset += pdf.getTextDimensions(summary).h + 20;
+//     // --- Summary ---
+//     pdf.setFontSize(14);
+//     pdf.text("Summary", margin, yOffset);
+//     yOffset += 10;
+//     const summary = "Passionate about creating interactive web applications and constantly improving skills in front-end development.";
+//     checkPageOverflow(pdf.getTextDimensions(summary).h);
+//     pdf.setFontSize(12);
+//     pdf.text(summary, margin, yOffset, { maxWidth: pageWidth - 2 * margin });
+//     yOffset += pdf.getTextDimensions(summary).h + 20;
 
-    // --- Experience ---
-    pdf.setFontSize(14);
-    pdf.text("Experience", margin, yOffset);
-    yOffset += 10;
+//     // --- Experience ---
+//     pdf.setFontSize(14);
+//     pdf.text("Experience", margin, yOffset);
+//     yOffset += 10;
 
-    const experienceText = `Junior Software Developer\nVista Intelligence Pvt. Ltd. (2022 - 2023)\n- Implemented dynamic UI features\n- Developed data visualization charts\n- Optimized website responsiveness`;
-    checkPageOverflow(pdf.getTextDimensions(experienceText).h);
-    pdf.setFontSize(12);
-    pdf.text(experienceText, margin, yOffset,{ maxWidth: pageWidth - 2 * margin });
-    yOffset += pdf.getTextDimensions(experienceText).h + 30;
+//     const experienceText = `Junior Software Developer\nVista Intelligence Pvt. Ltd. (2022 - 2023)\n- Implemented dynamic UI features\n- Developed data visualization charts\n- Optimized website responsiveness`;
+//     checkPageOverflow(pdf.getTextDimensions(experienceText).h);
+//     pdf.setFontSize(12);
+//     pdf.text(experienceText, margin, yOffset,{ maxWidth: pageWidth - 2 * margin });
+//     yOffset += pdf.getTextDimensions(experienceText).h + 30;
 
-    // --- Education ---
-    pdf.setFontSize(14);
-    pdf.text("Education", margin, yOffset);
-    yOffset += 10;
+//     // --- Education ---
+//     pdf.setFontSize(14);
+//     pdf.text("Education", margin, yOffset);
+//     yOffset += 10;
 
-    const educationText = `Master of Computer Application\nHaldia Institute of Technology (2020 - 2022)\nScore: 9.2/10`;
-    checkPageOverflow(pdf.getTextDimensions(educationText).h);
-    pdf.setFontSize(12);
-    pdf.text(educationText, margin, yOffset);
-    yOffset += pdf.getTextDimensions(educationText).h + 10;
+//     const educationText = `Master of Computer Application\nHaldia Institute of Technology (2020 - 2022)\nScore: 9.2/10`;
+//     checkPageOverflow(pdf.getTextDimensions(educationText).h);
+//     pdf.setFontSize(12);
+//     pdf.text(educationText, margin, yOffset);
+//     yOffset += pdf.getTextDimensions(educationText).h + 10;
 
-    const bscText = `B.Sc. in Computer Science\nMahishadal Raj College (2017 - 2020)\nScore: 6.5/10`;
-    checkPageOverflow(pdf.getTextDimensions(bscText).h);
-    pdf.text(bscText, margin, yOffset);
-    yOffset += pdf.getTextDimensions(bscText).h + 20;
+//     const bscText = `B.Sc. in Computer Science\nMahishadal Raj College (2017 - 2020)\nScore: 6.5/10`;
+//     checkPageOverflow(pdf.getTextDimensions(bscText).h);
+//     pdf.text(bscText, margin, yOffset);
+//     yOffset += pdf.getTextDimensions(bscText).h + 20;
 
-    // --- Projects ---
-    pdf.setFontSize(14);
-    pdf.text("Projects", margin, yOffset);
-    yOffset += 10;
+//     // --- Projects ---
+//     pdf.setFontSize(14);
+//     pdf.text("Projects", margin, yOffset);
+//     yOffset += 10;
 
-    const project1 = `Feedsene - Stock market data analysis platform\nTechnologies: ReactJS, NestJS, PostgreSQL\nDescription: A platform for stock market analysis.`;
-    checkPageOverflow(pdf.getTextDimensions(project1).h);
-    pdf.setFontSize(12);
-    pdf.text(project1, margin, yOffset);
-    yOffset += pdf.getTextDimensions(project1).h + 20;
+//     const project1 = `Feedsene - Stock market data analysis platform\nTechnologies: ReactJS, NestJS, PostgreSQL\nDescription: A platform for stock market analysis.`;
+//     checkPageOverflow(pdf.getTextDimensions(project1).h);
+//     pdf.setFontSize(12);
+//     pdf.text(project1, margin, yOffset);
+//     yOffset += pdf.getTextDimensions(project1).h + 20;
 
-    const project2 = `E-commerce Website - MERN stack application\nTechnologies: MERN, Razorpay\nDescription: E-commerce platform with payment gateway integration.`;
-    checkPageOverflow(pdf.getTextDimensions(project2).h);
-    pdf.text(project2, margin, yOffset);
-    yOffset += pdf.getTextDimensions(project2).h + 20;
+//     const project2 = `E-commerce Website - MERN stack application\nTechnologies: MERN, Razorpay\nDescription: E-commerce platform with payment gateway integration.`;
+//     checkPageOverflow(pdf.getTextDimensions(project2).h);
+//     pdf.text(project2, margin, yOffset);
+//     yOffset += pdf.getTextDimensions(project2).h + 20;
 
-    // --- Skills ---
-    pdf.setFontSize(14);
-    pdf.text("Skills", margin, yOffset);
-    yOffset += 10;
+//     // --- Skills ---
+//     pdf.setFontSize(14);
+//     pdf.text("Skills", margin, yOffset);
+//     yOffset += 10;
 
-    const skills = "ReactJS, JavaScript, CSS, HTML, NodeJS, PostgreSQL, Git";
-    checkPageOverflow(pdf.getTextDimensions(skills).h);
-    pdf.setFontSize(12);
-    pdf.text(skills, margin, yOffset, { maxWidth: pageWidth - 2 * margin });
-    yOffset += pdf.getTextDimensions(skills).h + 20;
+//     const skills = "ReactJS, JavaScript, CSS, HTML, NodeJS, PostgreSQL, Git";
+//     checkPageOverflow(pdf.getTextDimensions(skills).h);
+//     pdf.setFontSize(12);
+//     pdf.text(skills, margin, yOffset, { maxWidth: pageWidth - 2 * margin });
+//     yOffset += pdf.getTextDimensions(skills).h + 20;
 
-    // --- Footer (Optional) ---
-    // pdf.text("Footer Information", pageWidth / 2, pageHeight - 10, { align: "center" });
+//     // --- Footer (Optional) ---
+//     // pdf.text("Footer Information", pageWidth / 2, pageHeight - 10, { align: "center" });
 
-    // Save the PDF
-    pdf.save("Sumit-Achar-CV.pdf");
-};
+//     // Save the PDF
+//     pdf.save("Sumit-Achar-CV.pdf");
+// };
 
 
 
@@ -189,7 +189,7 @@ const ResumePage: React.FC = () => {
       className="min-h-screen bg-gray-900 text-white py-12 px-4 md:px-16 lg:px-24"
     >
       <div
-        ref={resumeRef}
+        // ref={resumeRef}
         className="resume-container max-w-3xl mx-auto bg-gray-800 text-white shadow-lg rounded-lg p-8"
       >
         {/* Header */}
@@ -262,20 +262,26 @@ const ResumePage: React.FC = () => {
 
       {/* Download Button */}
       <div className="text-center mt-8">
-        <button
+        {/* <button
           className="bg-blue-500 text-white py-2 px-6 rounded-lg hover:bg-blue-600 transition"
           onClick={handleDownloadPDF}
         >
           Download CV
-        </button>
+        </button> */}
+        <a className="bg-blue-500 text-white py-2 px-6 rounded-lg hover:bg-blue-600 transition"
+                href="/resume.pdf" 
+                download 
+              >
+                Download Resume
+              </a>
       </div>
 
-      <style jsx>{`
+      {/* <style jsx>{`
         .light-mode {
           background: white !important;
           color: black !important;
         }
-      `}</style>
+      `}</style> */}
     </section>
   );
 };
