@@ -30,7 +30,7 @@ export default function Footer() {
                 Sumit<span className="text-primary-500">.</span>dev
               </p>
 
-              <p className="text-white/30 text-xs">Frontend Developer</p>
+              <p className="text-white/30 text-xs">Software Developer</p>
             </div>
           </div>
 
@@ -49,8 +49,7 @@ export default function Footer() {
 
           <p className="text-white/25 text-sm flex items-center gap-1.5">
             Made with{" "}
-            <Heart size={12} className="text-rose-400 fill-rose-400" /> in San
-           Kolkata, India          </p>
+            <Heart size={12} className="text-rose-400 fill-rose-400" /> in Kolkata, India          </p>
         </div>
       </div>
 
