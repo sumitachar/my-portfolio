@@ -148,3 +148,6 @@ a.glass-pearl:hover, button.glass-pearl:hover, .glass-pearl.spotlight:hover { bo
 
 /* glyphs shown while text "decrypts" into place */
 .scramble-glyph { color: rgb(var(--primary-400) / 0.7); font-family: 'Geist Mono', ui-monospace, monospace; font-style: normal; }
+
+/* outlined text that stays legible (used in the About values ticker) */
+.text-outline-strong { color: transparent; -webkit-text-stroke: 1px rgb(var(--white) / 0.4); }
