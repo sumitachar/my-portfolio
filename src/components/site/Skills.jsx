@@ -1,66 +1,58 @@
 import { useRef } from 'react';
 import { gsap, useGSAP, prefersReducedMotion } from '../../lib/gsap';
-import { skills } from '../../data/portfolio';
+import { stackLayers } from '../../data/portfolio';
 import SectionLabel from './SectionLabel';
 
+/** The stack as layers (frontend → craft) in large type, instead of skill-percentage bars. */
 export default function Skills() {
   const root = useRef(null);
 
   useGSAP(() => {
-    const q = gsap.utils.selector(root);
-
-    // spotlight follows the cursor inside each card
-    q('.spotlight').forEach((card) => {
-      card.addEventListener('mousemove', (e) => {
-        const r = card.getBoundingClientRect();
-        card.style.setProperty('--mx', `${e.clientX - r.left}px`);
-        card.style.setProperty('--my', `${e.clientY - r.top}px`);
-      });
-    });
-
     if (prefersReducedMotion()) return;
-    gsap.from(q('[data-skill]'), {
-      y: 50,
-      opacity: 0,
-      duration: 0.9,
-      stagger: { each: 0.06, from: 'start' },
-      ease: 'expo.out',
-      scrollTrigger: { trigger: q('[data-grid]')[0], start: 'top 80%' },
-    });
-    q('[data-level]').forEach((bar) => {
-      gsap.fromTo(bar, { scaleX: 0 }, {
-        scaleX: Number(bar.dataset.level) / 100,
-        duration: 1.4,
-        ease: 'expo.out',
-        scrollTrigger: { trigger: bar, start: 'top 90%' },
-      });
+    const q = gsap.utils.selector(root);
+    q('[data-layer]').forEach((row) => {
+      const tl = gsap.timeline({ scrollTrigger: { trigger: row, start: 'top 82%' } });
+      tl.from(row.querySelector('[data-rule]'), { scaleX: 0, duration: 1.2, ease: 'expo.inOut' })
+        .from(row.querySelectorAll('[data-meta]'), { y: 20, opacity: 0, duration: 0.8, stagger: 0.06, ease: 'expo.out' }, 0.2)
+        .from(row.querySelectorAll('[data-item]'), { yPercent: 110, duration: 0.9, stagger: 0.04, ease: 'expo.out' }, 0.25);
     });
   }, { scope: root });
 
   return (
     <section ref={root} id="skills" className="relative px-5 md:px-6 py-28 md:py-40">
       <div className="max-w-7xl mx-auto">
-        <SectionLabel index="06" label="Skills" />
-        <div className="flex flex-wrap items-end justify-between gap-6 mb-14">
-          <h2 className="font-display text-white text-4xl md:text-6xl font-semibold tracking-tight max-w-2xl">
-            Tools I use to <span className="text-gradient">ship</span> great products.
+        <SectionLabel index="06" label="Stack" />
+        <div className="flex flex-wrap items-end justify-between gap-6 mb-16 md:mb-20">
+          <h2 className="font-display text-white text-5xl md:text-7xl font-semibold tracking-[-0.045em] leading-[0.92] max-w-3xl">
+            The stack behind <span className="text-gradient">every build.</span>
           </h2>
-          <p className="text-white/50 max-w-sm">From the interface your customers see to the APIs and database behind it, I work across the full stack.</p>
+          <p className="text-white/50 max-w-sm leading-relaxed">From the interface your customers see to the APIs and database behind it, I work across the full stack.</p>
         </div>
 
-        <div data-grid className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {skills.map((s, i) => (
-            <div key={s.name} data-skill className="glass-pearl spotlight rounded-3xl p-6 md:p-7">
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-xs text-white/30">{String(i + 1).padStart(2, '0')}</span>
-                <span className="font-mono text-sm text-white/60">{s.level}%</span>
+        <div>
+          {stackLayers.map((l, i) => (
+            <div key={l.layer} data-layer className="relative grid md:grid-cols-[260px_1fr] gap-4 md:gap-12 py-8 md:py-10">
+              <span data-rule className="absolute left-0 right-0 top-0 h-px origin-left bg-[var(--line-strong)]" aria-hidden="true" />
+              <div>
+                <p data-meta className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary-400">{String(i + 1).padStart(2, '0')} · {l.layer}</p>
+                <p data-meta className="mt-2 text-sm text-white/45">{l.note}</p>
               </div>
-              <h3 className="mt-6 font-display text-2xl font-semibold text-white">{s.name}</h3>
-              <div className="mt-5 h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
-                <div data-level={s.level} className="h-full origin-left rounded-full bg-gradient-to-r from-primary-500 via-accent to-primary-400" style={{ transform: `scaleX(${s.level / 100})` }} />
-              </div>
+              <ul className="flex flex-wrap gap-x-3 gap-y-1">
+                {l.items.map((item, j) => (
+                  <li key={item} className="overflow-hidden pb-1">
+                    <span
+                      data-item
+                      className="group inline-flex items-baseline font-display text-2xl sm:text-3xl md:text-5xl font-medium tracking-[-0.035em] text-white/85 hover:text-primary-400 transition-colors cursor-default"
+                    >
+                      {item}
+                      {j < l.items.length - 1 && <span className="ml-3 text-white/15 font-light">/</span>}
+                    </span>
+                  </li>
+                ))}
+              </ul>
             </div>
           ))}
+          <span className="block h-px bg-[var(--line-strong)]" aria-hidden="true" />
         </div>
       </div>
     </section>

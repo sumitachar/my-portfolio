@@ -3,6 +3,7 @@ import { personalInfo } from '../../data/portfolio';
 import { socials } from '../site/Contact';
 import { useLenis, scrollToId } from '../site/SmoothScroll';
 import { useKolkataTime } from '../../lib/time';
+import HexName from '../site/HexName';
 
 export default function Footer() {
   const lenis = useLenis();
@@ -24,11 +25,12 @@ export default function Footer() {
           </button>
         </div>
 
-        <p className="mt-12 font-display font-bold leading-none tracking-[-0.05em] text-[22vw] md:text-[17vw] text-outline select-none text-center" aria-hidden="true">
-          {personalInfo.name.split(' ')[0]}
-        </p>
+        {/* my name, drawn in coloured hexagons: click one to theme the site */}
+        <div className="mt-14">
+          <HexName text={personalInfo.name.split(' ')[0]} />
+        </div>
 
-        <p className="mt-6 text-center text-xs text-white/30">
+        <p className="mt-10 text-center text-xs text-white/30">
           © {new Date().getFullYear()} {personalInfo.name}. Designed &amp; built in Kolkata.
         </p>
       </div>

@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { Menu, X, ArrowUpRight } from 'lucide-react';
+import { Menu, X, ArrowUpRight, Flashlight, FlashlightOff } from 'lucide-react';
+import { getTorch, setTorch, torchSupported } from '../../lib/torch';
 import { navLinks, personalInfo } from '../../data/portfolio';
 import { gsap, useGSAP, ScrollTrigger } from '../../lib/gsap';
 import { useLenis, scrollToId } from '../site/SmoothScroll';
-import ThemeToggle from '../ui/ThemeToggle';
 import Magnetic from '../site/Magnetic';
 
 export default function Navbar({ ready }) {
@@ -13,6 +13,14 @@ export default function Navbar({ ready }) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState('');
   const [scrolled, setScrolled] = useState(false);
+  const [torch, setTorchState] = useState(getTorch);
+  const [canTorch] = useState(torchSupported);
+
+  useEffect(() => {
+    const sync = (e) => setTorchState(e.detail);
+    window.addEventListener('torchchange', sync);
+    return () => window.removeEventListener('torchchange', sync);
+  }, []);
 
   const openRef = useRef(open);
   openRef.current = open;
@@ -85,7 +93,17 @@ export default function Navbar({ ready }) {
             </nav>
 
             <div className="flex items-center gap-2 md:gap-3">
-              <ThemeToggle />
+              {canTorch && (
+                <button
+                  onClick={() => setTorch(!torch)}
+                  aria-pressed={torch}
+                  aria-label={torch ? 'Turn torch light off' : 'Turn torch light on'}
+                  title={torch ? 'Torch on' : 'Torch off'}
+                  className={`grid place-items-center w-9 h-9 rounded-full border transition-colors ${torch ? 'border-primary-500/60 bg-primary-500/15 text-primary-400' : 'border-[var(--line)] text-white/50 hover:text-white'}`}
+                >
+                  {torch ? <Flashlight size={16} /> : <FlashlightOff size={16} />}
+                </button>
+              )}
               <Magnetic className="hidden md:inline-block">
                 <button
                   onClick={() => go('contact')}

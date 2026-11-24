@@ -35,14 +35,14 @@ export const stats = [
 ];
 
 export const services = [
-  { title: "Business websites & landing pages", text: "Fast, SEO-ready sites that explain what you do and turn visitors into enquiries." },
-  { title: "Web apps, SaaS & MVPs", text: "From first prototype to a production product your users can sign up for and pay for." },
-  { title: "Mobile apps", text: "Android and iOS apps, delivered with my network of mobile developers and designers." },
-  { title: "E-commerce stores", text: "Online stores with catalogues, carts, payments and an admin you can run yourself." },
-  { title: "Dashboards & data visualization", text: "Admin panels, analytics and real-time charts that make your data easy to act on." },
-  { title: "ERP, CRM & business systems", text: "Inventory, billing, CRM and ERP tools built around how your team already works." },
-  { title: "Secure APIs & integrations", text: "REST APIs with JWT auth, role-based access and integrations with the tools you use." },
-  { title: "Speed fixes, redesigns & support", text: "Performance audits, redesigns, maintenance and ongoing support after launch." },
+  { title: "Business websites & landing pages", text: "Fast, SEO-ready sites that explain what you do and turn visitors into enquiries.", tags: ["Landing pages", "SEO", "CMS / blog", "Analytics"] },
+  { title: "Web apps, SaaS & MVPs", text: "From first prototype to a production product your users can sign up for and pay for.", tags: ["Auth & roles", "Subscriptions", "Dashboards", "REST APIs"] },
+  { title: "Mobile apps", text: "Android and iOS apps, delivered with my network of mobile developers and designers.", tags: ["Android", "iOS", "Push notifications", "Store launch"] },
+  { title: "E-commerce stores", text: "Online stores with catalogues, carts, payments and an admin you can run yourself.", tags: ["Catalogue", "Checkout & payments", "Orders", "Inventory"] },
+  { title: "Dashboards & data visualization", text: "Admin panels, analytics and real-time charts that make your data easy to act on.", tags: ["Real-time charts", "Data tables", "Exports", "Role-based access"] },
+  { title: "ERP, CRM & business systems", text: "Inventory, billing, CRM and ERP tools built around how your team already works.", tags: ["Inventory", "Billing", "CRM", "Reports"] },
+  { title: "Secure APIs & integrations", text: "REST APIs with JWT auth, role-based access and integrations with the tools you use.", tags: ["REST", "JWT auth", "Payments", "Webhooks"] },
+  { title: "Speed fixes, redesigns & support", text: "Performance audits, redesigns, maintenance and ongoing support after launch.", tags: ["Performance audit", "Redesign", "Maintenance", "New features"] },
 ];
 
 export const process = [
@@ -65,6 +65,13 @@ export const skills = [
   { name: "PostgreSQL", level: 80, color: "#336791" },
   { name: "REST APIs & JWT Auth", level: 88, color: "#22C55E" },
   { name: "Data Visualization", level: 85, color: "#F97316" },
+];
+
+export const stackLayers = [
+  { layer: "Frontend", note: "Interfaces people enjoy using", items: ["React.js", "Next.js", "TypeScript", "JavaScript", "Tailwind CSS", "Redux Toolkit"] },
+  { layer: "Backend", note: "APIs and business logic", items: ["Node.js", "NestJS", "Express.js", "REST APIs", "JWT auth"] },
+  { layer: "Data", note: "Storage, reporting and charts", items: ["PostgreSQL", "Chart.js", "Recharts", "Data tables"] },
+  { layer: "Craft", note: "How it ships", items: ["Performance", "Responsive & accessible", "Reusable components", "Git"] },
 ];
 
 export const techStack = [

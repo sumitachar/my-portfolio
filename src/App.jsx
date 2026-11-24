@@ -14,6 +14,7 @@ import FAQ from './components/site/FAQ';
 import CtaBand from './components/site/CtaBand';
 import ChatAssistant from './components/site/ChatAssistant';
 import AdminGate from './components/admin/AdminGate';
+import Torch from './components/site/Torch';
 import Projects from './components/site/Projects';
 import Experience from './components/site/Experience';
 import Skills from './components/site/Skills';
@@ -46,6 +47,7 @@ export default function App() {
           <Contact />
         </main>
         <div className="relative z-[2]"><Footer /></div>
+        <Torch ready={ready} />
         <ChatAssistant />
         <AdminGate />
       </div>

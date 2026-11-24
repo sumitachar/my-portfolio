@@ -145,3 +145,6 @@ a.glass-pearl:hover, button.glass-pearl:hover, .glass-pearl.spotlight:hover { bo
   -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
   mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
 }
+
+/* glyphs shown while text "decrypts" into place */
+.scramble-glyph { color: rgb(var(--primary-400) / 0.7); font-family: 'Geist Mono', ui-monospace, monospace; font-style: normal; }
