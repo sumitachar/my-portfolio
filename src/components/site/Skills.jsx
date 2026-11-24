@@ -57,7 +57,7 @@ export default function Skills() {
               </div>
               <h3 className="mt-6 font-display text-2xl font-semibold text-white">{s.name}</h3>
               <div className="mt-5 h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
-                <div data-level={s.level} className="h-full origin-left rounded-full bg-gradient-to-r from-primary-500 via-accent to-sky-400" style={{ transform: `scaleX(${s.level / 100})` }} />
+                <div data-level={s.level} className="h-full origin-left rounded-full bg-gradient-to-r from-primary-500 via-accent to-primary-400" style={{ transform: `scaleX(${s.level / 100})` }} />
               </div>
             </div>
           ))}

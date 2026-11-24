@@ -287,7 +287,7 @@ export default function ChatAssistant() {
           onClick={() => { setOpen((v) => !v); dismissTeaser(); }}
           aria-label={open ? 'Close project assistant' : 'Open project assistant'}
           aria-expanded={open}
-          className="group relative flex items-center gap-2.5 rounded-full bg-primary-500 pl-3 pr-5 py-3 text-white shadow-[0_12px_40px_-8px_rgb(var(--primary-500)/0.8)] hover:bg-primary-600 transition-colors"
+          className="group relative flex items-center gap-2.5 rounded-full bg-primary-500 pl-3 pr-5 py-3 text-on-primary shadow-[0_12px_40px_-8px_rgb(var(--primary-500)/0.8)] hover:bg-primary-600 transition-colors"
           data-cursor={open ? '' : 'Chat'}
         >
           <span className="relative grid place-items-center w-8 h-8 rounded-full bg-white/20">
@@ -314,7 +314,7 @@ export default function ChatAssistant() {
             {/* header */}
             <header className="relative shrink-0 px-5 pt-5 pb-4 border-b border-[var(--line)]">
               <div className="flex items-center gap-3">
-                <span className="relative grid place-items-center w-11 h-11 rounded-2xl bg-gradient-to-br from-primary-500 to-sky-400 text-white">
+                <span className="relative grid place-items-center w-11 h-11 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-400 text-white">
                   <Sparkles size={19} className="text-white" style={{ color: '#fff' }} />
                   <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 ring-2 ring-[var(--color-surface-2)]" />
                 </span>
@@ -331,7 +331,7 @@ export default function ChatAssistant() {
               </div>
               {inFlow && (
                 <div className="absolute left-0 bottom-0 h-0.5 w-full bg-white/5">
-                  <motion.div className="h-full bg-gradient-to-r from-primary-500 to-sky-400" animate={{ width: `${Math.max(6, progress * 100)}%` }} />
+                  <motion.div className="h-full bg-gradient-to-r from-primary-500 to-primary-400" animate={{ width: `${Math.max(6, progress * 100)}%` }} />
                 </div>
               )}
             </header>
@@ -359,7 +359,7 @@ export default function ChatAssistant() {
                       key={c}
                       onClick={() => (step === 'features' ? setPicked((p) => (p.includes(c) ? p.filter((x) => x !== c) : [...p, c])) : answer(c))}
                       className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-2 text-[13px] transition-colors ${
-                        active ? 'border-primary-500 bg-primary-500 text-white' : 'border-primary-500/40 text-white/85 hover:bg-primary-500/15 hover:border-primary-500'
+                        active ? 'border-primary-500 bg-primary-500 text-on-primary' : 'border-primary-500/40 text-white/85 hover:bg-primary-500/15 hover:border-primary-500'
                       }`}
                     >
                       {active && <Check size={13} />}
@@ -368,7 +368,7 @@ export default function ChatAssistant() {
                   );
                 })}
                 {step === 'features' && picked.filter((p) => !chips.includes(p)).map((c) => (
-                  <button key={c} onClick={() => setPicked((p) => p.filter((x) => x !== c))} className="inline-flex items-center gap-1.5 rounded-full border border-primary-500 bg-primary-500 text-white px-3.5 py-2 text-[13px]">
+                  <button key={c} onClick={() => setPicked((p) => p.filter((x) => x !== c))} className="inline-flex items-center gap-1.5 rounded-full border border-primary-500 bg-primary-500 text-on-primary px-3.5 py-2 text-[13px]">
                     <Check size={13} /> {c}
                   </button>
                 ))}
@@ -376,7 +376,7 @@ export default function ChatAssistant() {
             )}
             {step === 'features' && !typing && (
               <div className="shrink-0 px-4 pb-3 flex gap-2">
-                <button onClick={() => confirmFeatures(false)} disabled={!picked.length} className="flex-1 rounded-full bg-primary-500 py-2.5 text-sm font-medium text-white disabled:opacity-40 hover:bg-primary-600 transition-colors">
+                <button onClick={() => confirmFeatures(false)} disabled={!picked.length} className="flex-1 rounded-full bg-primary-500 py-2.5 text-sm font-medium text-on-primary disabled:opacity-40 hover:bg-primary-600 transition-colors">
                   Continue{picked.length ? ` (${picked.length})` : ''}
                 </button>
                 <button onClick={() => confirmFeatures(true)} className="rounded-full border border-[var(--line)] px-4 py-2.5 text-sm text-white/70 hover:text-white">
@@ -399,7 +399,7 @@ export default function ChatAssistant() {
                 aria-label="Message"
                 className="flex-1 min-w-0 rounded-full bg-white/[0.05] border border-[var(--line)] px-4 py-3 text-sm text-white placeholder:text-white/35 outline-none focus:border-primary-500 disabled:opacity-50"
               />
-              <button type="submit" disabled={!inputEnabled || typing || !input.trim()} className="grid place-items-center w-11 h-11 rounded-full bg-primary-500 text-white disabled:opacity-40 hover:bg-primary-600 transition-colors" aria-label="Send">
+              <button type="submit" disabled={!inputEnabled || typing || !input.trim()} className="grid place-items-center w-11 h-11 rounded-full bg-primary-500 text-on-primary disabled:opacity-40 hover:bg-primary-600 transition-colors" aria-label="Send">
                 <Send size={16} />
               </button>
             </form>
@@ -429,7 +429,7 @@ function Message({ m, onSend, onEdit, step }) {
         </dl>
         {step === 'summary' && (
           <div className="mt-4 flex gap-2">
-            <button onClick={onSend} className="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-primary-500 py-2.5 text-sm font-medium text-white hover:bg-primary-600 transition-colors">
+            <button onClick={onSend} className="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-primary-500 py-2.5 text-sm font-medium text-on-primary hover:bg-primary-600 transition-colors">
               <Send size={14} /> Send to Sumit
             </button>
             <button onClick={onEdit} className="rounded-full border border-[var(--line)] px-4 py-2.5 text-sm text-white/70 hover:text-white">Start over</button>
@@ -440,7 +440,7 @@ function Message({ m, onSend, onEdit, step }) {
   }
   if (m.kind === 'mailto') {
     return (
-      <a href={m.href} className="inline-flex items-center gap-2 rounded-full bg-primary-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-primary-600 transition-colors">
+      <a href={m.href} className="inline-flex items-center gap-2 rounded-full bg-primary-500 px-4 py-2.5 text-sm font-medium text-on-primary hover:bg-primary-600 transition-colors">
         <Mail size={15} /> Email my request to Sumit
       </a>
     );
@@ -450,7 +450,7 @@ function Message({ m, onSend, onEdit, step }) {
     <div className={`flex ${bot ? 'justify-start' : 'justify-end'}`}>
       <p
         className={`max-w-[85%] whitespace-pre-line rounded-2xl px-4 py-2.5 text-[14px] leading-relaxed ${
-          bot ? 'rounded-bl-md bg-white/[0.06] text-white/90' : 'rounded-br-md bg-primary-500 text-[#fff]'
+          bot ? 'rounded-bl-md bg-white/[0.06] text-white/90' : 'rounded-br-md bg-primary-500 text-on-primary'
         }`}
       >
         {m.text}

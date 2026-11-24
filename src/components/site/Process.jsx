@@ -37,7 +37,7 @@ export default function Process() {
 
         <ol data-steps className="relative grid md:grid-cols-2 lg:grid-cols-4 gap-5">
           <span className="hidden lg:block absolute left-0 right-0 top-[38px] h-px bg-white/10" aria-hidden="true" />
-          <span data-track className="hidden lg:block absolute left-0 right-0 top-[38px] h-px origin-left bg-gradient-to-r from-primary-500 via-accent to-sky-400" aria-hidden="true" />
+          <span data-track className="hidden lg:block absolute left-0 right-0 top-[38px] h-px origin-left bg-gradient-to-r from-primary-500 via-accent to-primary-400" aria-hidden="true" />
           {processSteps.map((s, i) => {
             const Icon = ICONS[i];
             return (
@@ -49,7 +49,7 @@ export default function Process() {
                   <span className="font-mono text-xs uppercase tracking-[0.2em] text-white/40">Step {s.step}</span>
                 </div>
                 <div className="glass-pearl rounded-3xl p-6 md:p-7 h-[calc(100%-100px)]">
-                  <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-400">{s.time}</p>
+                  <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary-400">{s.time}</p>
                   <h3 className="mt-3 font-display text-2xl font-semibold text-white">{s.title}</h3>
                   <p className="mt-3 text-white/55 leading-relaxed">{s.text}</p>
                 </div>
@@ -60,7 +60,7 @@ export default function Process() {
 
         <div className="mt-14 flex flex-wrap items-center gap-4">
           <Magnetic>
-            <button onClick={() => openAssistant('project')} className="group inline-flex items-center gap-2 rounded-full bg-primary-500 px-7 py-4 text-sm font-medium text-[#fff] hover:bg-primary-600 transition-colors">
+            <button onClick={() => openAssistant('project')} className="group inline-flex items-center gap-2 rounded-full bg-primary-500 px-7 py-4 text-sm font-medium text-on-primary hover:bg-primary-600 transition-colors">
               Start with a free consultation
               <ArrowUpRight size={16} className="transition-transform group-hover:rotate-45" />
             </button>

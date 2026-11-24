@@ -113,7 +113,7 @@ function Login() {
         <input type="password" required autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" className={field} />
       </div>
       {error && <p className="mt-3 text-sm text-rose-400" role="alert">{error}</p>}
-      <button disabled={loading} className="mt-6 w-full rounded-full bg-primary-500 py-3 text-sm font-medium text-[#fff] hover:bg-primary-600 disabled:opacity-50 transition-colors">
+      <button disabled={loading} className="mt-6 w-full rounded-full bg-primary-500 py-3 text-sm font-medium text-on-primary hover:bg-primary-600 disabled:opacity-50 transition-colors">
         {loading ? 'Signing in…' : 'Sign in'}
       </button>
     </form>
@@ -220,7 +220,7 @@ function Dashboard({ user, onClose }) {
           <button
             key={s}
             onClick={() => setFilter(s)}
-            className={`rounded-full px-3.5 py-1.5 text-xs capitalize border transition-colors ${filter === s ? 'bg-primary-500 border-primary-500 text-[#fff]' : 'border-[var(--line)] text-white/60 hover:text-white'}`}
+            className={`rounded-full px-3.5 py-1.5 text-xs capitalize border transition-colors ${filter === s ? 'bg-primary-500 border-primary-500 text-on-primary' : 'border-[var(--line)] text-white/60 hover:text-white'}`}
           >
             {s} <span className="opacity-60">{counts[s] ?? 0}</span>
           </button>
@@ -320,7 +320,7 @@ function LeadDetail({ lead, onBack }) {
 
       {/* quick actions */}
       <div className="mt-6 flex flex-wrap gap-2">
-        <a href={`mailto:${lead.email}?subject=${subject}`} className="inline-flex items-center gap-2 rounded-full bg-primary-500 px-4 py-2 text-sm font-medium text-[#fff] hover:bg-primary-600"><Mail size={15} /> Reply by email</a>
+        <a href={`mailto:${lead.email}?subject=${subject}`} className="inline-flex items-center gap-2 rounded-full bg-primary-500 px-4 py-2 text-sm font-medium text-on-primary hover:bg-primary-600"><Mail size={15} /> Reply by email</a>
         {digits && <a href={`https://wa.me/${digits}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-emerald-400/40 px-4 py-2 text-sm text-emerald-300 hover:bg-emerald-400/10"><MessageCircle size={15} /> WhatsApp</a>}
         {digits && <a href={`tel:${lead.phone}`} className="inline-flex items-center gap-2 rounded-full border border-[var(--line)] px-4 py-2 text-sm text-white/70 hover:text-white"><Phone size={15} /> Call</a>}
         <button onClick={copy} className="inline-flex items-center gap-2 rounded-full border border-[var(--line)] px-4 py-2 text-sm text-white/70 hover:text-white">

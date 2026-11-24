@@ -69,7 +69,7 @@ export default function Services() {
           <Magnetic>
             <button
               onClick={() => openAssistant('project')}
-              className="group inline-flex items-center gap-2 rounded-full bg-primary-500 px-7 py-4 text-sm font-medium text-white hover:bg-primary-600 transition-colors"
+              className="group inline-flex items-center gap-2 rounded-full bg-primary-500 px-7 py-4 text-sm font-medium text-on-primary hover:bg-primary-600 transition-colors"
             >
               Get a free project estimate
               <ArrowUpRight size={16} className="transition-transform group-hover:rotate-45" />

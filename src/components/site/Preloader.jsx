@@ -37,7 +37,7 @@ export default function Preloader({ onDone }) {
           <span data-word data-num className="block font-display text-white text-7xl md:text-[10rem] leading-none font-bold tabular-nums">000</span>
         </div>
       </div>
-      <div data-bar className="absolute bottom-0 left-0 h-1 w-full origin-left scale-x-0 bg-gradient-to-r from-primary-500 via-accent to-sky-400" />
+      <div data-bar className="absolute bottom-0 left-0 h-1 w-full origin-left scale-x-0 bg-gradient-to-r from-primary-500 via-accent to-primary-400" />
     </div>
   );
 }

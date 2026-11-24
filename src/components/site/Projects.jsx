@@ -43,7 +43,7 @@ function Preview({ project, index }) {
           <div className="h-2 w-5/6 rounded bg-black/10" />
           <div className="h-2 w-2/3 rounded bg-black/10" />
           <div className="grid grid-cols-3 gap-2 pt-2">
-            {[0, 1, 2].map((i) => <div key={i} className={`h-12 rounded-lg bg-gradient-to-br ${project.gradient} opacity-70`} />)}
+            {[0, 1, 2].map((i) => <div key={i} className={`h-12 rounded-lg ${i === 0 ? 'bg-[rgb(197_232_108)]' : 'bg-black/10'}`} />)}
           </div>
         </div>
       </div>
@@ -70,7 +70,7 @@ function ProjectCard({ project, index }) {
           <p className="mt-2 text-white/55 leading-relaxed">{project.description}</p>
         </div>
         {live && (
-          <span className="grid place-items-center w-12 h-12 rounded-full border border-white/15 text-white transition-all group-hover:bg-primary-500 group-hover:border-primary-500 group-hover:rotate-45">
+          <span className="grid place-items-center w-12 h-12 rounded-full border border-white/15 text-white transition-all group-hover:bg-primary-500 group-hover:text-on-primary group-hover:border-primary-500 group-hover:rotate-45">
             <ArrowUpRight size={18} />
           </span>
         )}
@@ -171,7 +171,7 @@ export default function Projects() {
       </div>
 
       <div className="hidden lg:block absolute bottom-10 left-1/2 -translate-x-1/2 w-48 h-px bg-white/10" aria-hidden="true">
-        <div data-progress-bar className="h-full origin-left scale-x-0 bg-gradient-to-r from-primary-500 to-sky-400" />
+        <div data-progress-bar className="h-full origin-left scale-x-0 bg-gradient-to-r from-primary-500 to-primary-400" />
       </div>
     </section>
   );

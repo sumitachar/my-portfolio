@@ -31,7 +31,7 @@ export default function FAQ() {
             <span className="grid place-items-center w-11 h-11 rounded-2xl bg-primary-500/15 text-primary-400"><Bot size={20} /></span>
             <p className="mt-4 font-display text-xl font-semibold text-white">Ask the project assistant</p>
             <p className="mt-2 text-sm text-white/55 leading-relaxed">Get instant answers, or describe your project and get a free estimate from {personalInfo.name.split(' ')[0]} within 24 hours.</p>
-            <button onClick={() => openAssistant()} className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary-500 px-5 py-3 text-sm font-medium text-[#fff] hover:bg-primary-600 transition-colors">
+            <button onClick={() => openAssistant()} className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary-500 px-5 py-3 text-sm font-medium text-on-primary hover:bg-primary-600 transition-colors">
               Open chat
             </button>
           </div>
@@ -49,7 +49,7 @@ export default function FAQ() {
                     className="w-full flex items-center justify-between gap-6 py-6 md:py-7 text-left group"
                   >
                     <span className={`font-display text-lg md:text-2xl font-medium transition-colors ${open ? 'text-white' : 'text-white/75 group-hover:text-white'}`}>{f.q}</span>
-                    <span className={`grid place-items-center shrink-0 w-10 h-10 rounded-full border transition-all duration-300 ${open ? 'rotate-45 bg-primary-500 border-primary-500 text-[#fff]' : 'border-[var(--line)] text-white/60'}`}>
+                    <span className={`grid place-items-center shrink-0 w-10 h-10 rounded-full border transition-all duration-300 ${open ? 'rotate-45 bg-primary-500 border-primary-500 text-on-primary' : 'border-[var(--line)] text-white/60'}`}>
                       <Plus size={18} />
                     </span>
                   </button>

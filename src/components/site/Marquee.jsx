@@ -8,9 +8,9 @@ function Row({ items, reverse }) {
       {[0, 1].map((copy) => (
         <div key={copy} className="flex shrink-0 items-center" aria-hidden={copy === 1 || undefined}>
           {items.map((t) => (
-            <span key={`${copy}-${t.name}`} className="flex items-center gap-6 px-6 font-display text-4xl md:text-6xl font-semibold text-white/80 whitespace-nowrap">
+            <span key={`${copy}-${t.name}`} className="flex items-center gap-6 px-6 font-display text-4xl md:text-6xl font-medium tracking-[-0.03em] text-white/25 hover:text-white/70 transition-colors whitespace-nowrap">
               {t.name}
-              <span className="text-primary-500 text-2xl md:text-3xl">✦</span>
+              <span className="text-primary-500/80 text-xl md:text-2xl">✦</span>
             </span>
           ))}
         </div>
@@ -42,7 +42,7 @@ export default function Marquee() {
 
   const half = Math.ceil(techStack.length / 2);
   return (
-    <section ref={root} className="relative py-16 md:py-24 overflow-hidden border-y border-white/5 -rotate-1 scale-[1.02]" aria-label="Technologies I work with">
+    <section ref={root} className="relative py-16 md:py-24 overflow-hidden border-y border-[var(--line)]" aria-label="Technologies I work with">
       <Row items={techStack.slice(0, half)} />
       <div className="h-4 md:h-6" />
       <Row items={techStack.slice(half)} reverse />

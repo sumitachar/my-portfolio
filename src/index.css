@@ -1,40 +1,49 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ---------- Theme tokens (dark default, .light override) ---------- */
+/* ---------- Theme tokens: calm graphite + one restrained lime accent ---------- */
 :root {
-  --primary-50: 238 242 255;
-  --primary-100: 224 231 255;
-  --primary-400: 129 140 248;
-  --primary-500: 99 102 241;
-  --primary-600: 79 70 229;
-  --primary-700: 67 56 202;
-  --accent: 167 139 250;
-  --sky: 56 189 248;
-  --white: 255 255 255;
-  --text: #e2e8f0;
-  --font-display: 'Space Grotesk';
-  --color-surface: #0a0a12;
-  --color-surface-2: #12121f;
-  --color-surface-3: #1a1a2e;
+  --primary-50: 247 254 231;
+  --primary-100: 236 252 203;
+  --primary-400: 212 240 125;   /* accent text on dark */
+  --primary-500: 197 232 108;   /* accent fills (buttons, dots) */
+  --primary-600: 178 214 84;    /* accent hover */
+  --primary-700: 132 168 42;
+  --accent: 225 245 170;        /* paler lime, for gradients */
+  --sky: 160 220 140;           /* soft green, gradient tail */
+  --on-primary: 12 14 8;        /* text on accent fills */
+  --white: 236 236 232;         /* "white" = foreground ink, flips in light mode */
+  --text: #d9d9d4;
+  --font-display: 'Geist';
+  --color-surface: #0b0b0c;
+  --color-surface-2: #131315;
+  --color-surface-3: #1a1a1d;
+  --panel: rgb(255 255 255 / 0.025);
+  --panel-hover: rgb(255 255 255 / 0.045);
   --line: rgb(255 255 255 / 0.08);
+  --line-strong: rgb(255 255 255 / 0.14);
   color-scheme: dark;
 }
 html.light {
-  --primary-400: 99 102 241;
-  --primary-500: 79 70 229;
-  --primary-600: 67 56 202;
-  --accent: 124 58 237;
-  --sky: 14 165 233;
-  --white: 15 15 30;
-  --text: #1e1e2e;
-  --color-surface: #f7f7fb;
+  --primary-400: 77 110 12;     /* readable olive for accent text on light */
+  --primary-500: 190 226 92;
+  --primary-600: 172 208 70;
+  --primary-700: 77 110 12;
+  --accent: 120 160 30;
+  --sky: 60 130 60;
+  --on-primary: 12 14 8;
+  --white: 20 20 18;
+  --text: #2a2a27;
+  --color-surface: #f5f4ef;
   --color-surface-2: #ffffff;
-  --color-surface-3: #eef0f7;
-  --line: rgb(15 15 30 / 0.08);
+  --color-surface-3: #ecebe5;
+  --panel: rgb(255 255 255 / 0.7);
+  --panel-hover: rgb(255 255 255 / 0.95);
+  --line: rgb(20 20 18 / 0.09);
+  --line-strong: rgb(20 20 18 / 0.16);
   color-scheme: light;
 }
 
@@ -45,39 +54,44 @@ html.lenis, html.lenis body { height: auto; }
 body {
   background: var(--color-surface);
   color: var(--text);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Geist', system-ui, sans-serif;
+  font-feature-settings: 'ss01', 'cv11';
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
   transition: background-color .4s ease, color .4s ease;
 }
-::selection { background: rgb(var(--primary-500) / 0.35); color: rgb(var(--white)); }
-::-webkit-scrollbar { width: 6px; }
+::selection { background: rgb(var(--primary-500)); color: rgb(var(--on-primary)); }
+::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: var(--color-surface); }
-::-webkit-scrollbar-thumb { background: rgb(var(--primary-500)); border-radius: 3px; }
-
+::-webkit-scrollbar-thumb { background: rgb(var(--white) / 0.15); border-radius: 4px; border: 2px solid var(--color-surface); }
+::-webkit-scrollbar-thumb:hover { background: rgb(var(--white) / 0.3); }
+:focus-visible { outline: 2px solid rgb(var(--primary-500)); outline-offset: 3px; border-radius: 6px; }
 
 @layer utilities {
+  /* Accent words: editorial serif italic in the accent colour (replaces the old rainbow gradient) */
   .text-gradient {
-    background: linear-gradient(135deg, rgb(var(--primary-500)), rgb(var(--accent)), rgb(var(--sky)));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: rgb(var(--primary-400));
   }
   .text-outline {
     color: transparent;
-    -webkit-text-stroke: 1px rgb(var(--white) / 0.12);
+    -webkit-text-stroke: 1px rgb(var(--white) / 0.06);
   }
   .glass {
-    background: rgb(var(--white) / 0.03);
-    backdrop-filter: blur(20px);
+    background: var(--panel);
+    backdrop-filter: blur(16px);
     border: 1px solid var(--line);
   }
   .noise::before {
     content: '';
     position: fixed;
     inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.028;
     pointer-events: none;
     z-index: 100;
   }
@@ -86,80 +100,48 @@ body {
 /* Split-text helpers: each char/word sits in a clipping mask so it can slide up into view */
 .split-mask { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.2em; margin-bottom: -0.2em; }
 .split-inner { display: inline-block; will-change: transform; }
+.text-gradient .split-mask { padding-right: 0.06em; } /* italic overhang */
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
 @keyframes scrollLine { 0% { transform: translateY(-100%); } 100% { transform: translateY(200%); } }
-/* gradient text across split letters: each letter samples one viewport-wide gradient */
-.text-gradient .split-inner {
-  background: linear-gradient(135deg, rgb(var(--primary-500)), rgb(var(--accent)), rgb(var(--sky)));
-  background-attachment: fixed;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
+@keyframes blink { 50% { opacity: 0; } }
 
-/* ---------- Pearl glass: frosted, translucent cards over the liquid background ---------- */
-@property --pearl-angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+/* ---------- Panels: quiet surfaces with a hairline border (class name kept for compatibility) ---------- */
 .glass-pearl {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background: linear-gradient(135deg, rgb(255 255 255 / 0.42), rgb(255 255 255 / 0.14) 45%, rgb(255 255 255 / 0.26));
-  backdrop-filter: blur(22px) saturate(170%);
-  -webkit-backdrop-filter: blur(22px) saturate(170%);
-  border: 1px solid rgb(255 255 255 / 0.55);
-  box-shadow:
-    0 10px 40px -12px rgb(76 29 149 / 0.25),
-    inset 0 1px 0 rgb(255 255 255 / 0.8),
-    inset 0 -1px 0 rgb(255 255 255 / 0.15);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.04);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  transition: border-color .35s ease, background-color .35s ease, transform .35s ease;
 }
-/* slow-moving pearlescent sheen */
-.glass-pearl::before {
-  content: '';
-  position: absolute;
-  inset: -40%;
-  z-index: -1;
-  background: conic-gradient(from var(--pearl-angle) at 50% 50%, #ffd6f5, #d6e4ff, #e5d6ff, #d6fff6, #fff3d6, #ffd6f5);
-  opacity: 0.32;
-  filter: blur(30px);
-  animation: pearl-spin 14s linear infinite;
-  pointer-events: none;
-}
-/* thin iridescent rim */
-.glass-pearl::after {
+html.light .glass-pearl { box-shadow: 0 1px 2px rgb(20 20 18 / 0.04), 0 8px 24px -12px rgb(20 20 18 / 0.08); }
+a.glass-pearl:hover, button.glass-pearl:hover, .glass-pearl.spotlight:hover { border-color: var(--line-strong); background-color: var(--panel-hover); }
+
+/* spotlight: a faint accent glow that follows the cursor inside a card */
+.glass-pearl.spotlight::before {
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(135deg, rgb(255 255 255 / 0.9), rgb(244 114 182 / 0.45), rgb(129 140 248 / 0.5), rgb(56 189 248 / 0.45), rgb(255 255 255 / 0.8));
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity .35s ease;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgb(var(--primary-500) / 0.09), transparent 45%);
   pointer-events: none;
 }
-@keyframes pearl-spin { to { --pearl-angle: 360deg; } }
+.glass-pearl.spotlight:hover::before { opacity: 1; }
 
-html:not(.light) .glass-pearl {
-  background: linear-gradient(135deg, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0.03) 45%, rgb(255 255 255 / 0.07));
-  border-color: rgb(255 255 255 / 0.14);
-  box-shadow: 0 10px 40px -12px rgb(0 0 0 / 0.6), inset 0 1px 0 rgb(255 255 255 / 0.18);
-}
-html:not(.light) .glass-pearl::before { opacity: 0.12; }
-html:not(.light) .glass-pearl::after { opacity: 0.45; }
-
-/* spotlight that follows the cursor, layered on the glass */
-.glass-pearl.spotlight::before { inset: -40%; }
-.glass-pearl.spotlight:hover {
+/* ---------- Ambient backdrop: hairline grid that fades out, plus a soft cursor light ---------- */
+.backdrop-grid {
   background-image:
-    radial-gradient(340px circle at var(--mx, 50%) var(--my, 50%), rgb(255 255 255 / 0.35), transparent 45%),
-    linear-gradient(135deg, rgb(255 255 255 / 0.42), rgb(255 255 255 / 0.14) 45%, rgb(255 255 255 / 0.26));
+    linear-gradient(to right, rgb(var(--white) / 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(var(--white) / 0.035) 1px, transparent 1px);
+  background-size: 72px 72px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
 }
-html:not(.light) .glass-pearl.spotlight:hover {
-  background-image:
-    radial-gradient(340px circle at var(--mx, 50%) var(--my, 50%), rgb(var(--primary-500) / 0.22), transparent 45%),
-    linear-gradient(135deg, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0.03) 45%, rgb(255 255 255 / 0.07));
-}
-@media (prefers-reduced-motion: reduce) { .glass-pearl::before { animation: none; } }

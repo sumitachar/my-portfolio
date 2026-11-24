@@ -1,18 +1,8 @@
-import { useEffect, useState } from 'react';
 import { ArrowUp } from 'lucide-react';
 import { personalInfo } from '../../data/portfolio';
 import { socials } from '../site/Contact';
 import { useLenis, scrollToId } from '../site/SmoothScroll';
-
-function useKolkataTime() {
-  const fmt = () => new Intl.DateTimeFormat('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' }).format(new Date());
-  const [time, setTime] = useState(fmt);
-  useEffect(() => {
-    const id = setInterval(() => setTime(fmt()), 30_000);
-    return () => clearInterval(id);
-  }, []);
-  return time;
-}
+import { useKolkataTime } from '../../lib/time';
 
 export default function Footer() {
   const lenis = useLenis();

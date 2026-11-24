@@ -35,7 +35,7 @@ export default function Experience() {
 
         <ol data-list className="relative">
           <span className="absolute left-[7px] md:left-[calc(25%+7px)] top-2 bottom-2 w-px bg-white/10" aria-hidden="true" />
-          <span data-progress className="absolute left-[7px] md:left-[calc(25%+7px)] top-2 bottom-2 w-px origin-top bg-gradient-to-b from-primary-500 via-accent to-sky-400" aria-hidden="true" />
+          <span data-progress className="absolute left-[7px] md:left-[calc(25%+7px)] top-2 bottom-2 w-px origin-top bg-gradient-to-b from-primary-500 via-accent to-primary-400" aria-hidden="true" />
 
           {experience.map((job) => (
             <li key={`${job.company}-${job.period}`} data-item className="relative grid md:grid-cols-[25%_1fr] gap-4 md:gap-12 pl-10 md:pl-0 pb-20 last:pb-0">

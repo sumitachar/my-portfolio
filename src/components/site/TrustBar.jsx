@@ -18,12 +18,12 @@ export default function TrustBar() {
 
   return (
     <section ref={root} aria-label="Why clients work with me" className="relative px-5 md:px-6 pb-16">
-      <ul className="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <ul className="max-w-7xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {trustPoints.map((t, i) => {
           const Icon = ICONS[i];
           return (
             <li key={t.title} data-trust className="glass-pearl rounded-2xl px-4 py-4 md:px-5 flex items-start gap-3">
-              <span className="grid place-items-center shrink-0 w-9 h-9 rounded-xl bg-emerald-400/15 text-emerald-400"><Icon size={17} /></span>
+              <span className="grid place-items-center shrink-0 w-9 h-9 rounded-xl bg-primary-500/10 text-primary-400"><Icon size={17} /></span>
               <div>
                 <p className="text-sm md:text-[15px] font-medium text-white">{t.title}</p>
                 <p className="mt-0.5 text-xs md:text-[13px] text-white/50 leading-snug">{t.text}</p>

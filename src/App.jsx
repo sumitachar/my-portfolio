@@ -2,7 +2,7 @@ import { useState } from 'react';
 import SmoothScroll from './components/site/SmoothScroll';
 import Preloader from './components/site/Preloader';
 import Cursor from './components/site/Cursor';
-import LiquidBackground from './components/site/LiquidBackground';
+import Backdrop from './components/site/Backdrop';
 import Navbar from './components/layout/Navbar';
 import Hero from './components/site/Hero';
 import Marquee from './components/site/Marquee';
@@ -28,8 +28,8 @@ export default function App() {
       <div className="noise relative min-h-screen">
         <Preloader onDone={() => setReady(true)} />
         <Cursor />
-        {/* layers: liquid background (z-0) → content (z-2) */}
-        <LiquidBackground />
+        {/* layers: calm backdrop (z-0) → content (z-2) */}
+        <Backdrop />
         <Navbar ready={ready} />
         <main className="relative z-[2]">
           <Hero ready={ready} />

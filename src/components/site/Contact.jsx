@@ -70,7 +70,7 @@ export default function Contact() {
 
   return (
     <section ref={root} id="contact" className="relative px-5 md:px-6 pt-28 md:pt-40 pb-16 overflow-hidden">
-      <div className="absolute left-1/2 bottom-0 -translate-x-1/2 w-[60rem] h-[30rem] rounded-full bg-primary-500/15 blur-[140px] -z-10" aria-hidden="true" />
+      <div className="absolute left-1/2 bottom-0 -translate-x-1/2 w-[60rem] h-[30rem] rounded-full bg-primary-500/[0.07] blur-[140px] -z-10" aria-hidden="true" />
       <div className="max-w-7xl mx-auto">
         <SectionLabel index="08" label="Contact" />
 
@@ -84,10 +84,10 @@ export default function Contact() {
             <p className="text-lg text-white/55 max-w-md leading-relaxed">
               Tell me what you’re building and I’ll reply within 24 hours with next steps, a rough timeline and a cost estimate.
             </p>
-            <p className="font-mono text-xs uppercase tracking-[0.2em] text-emerald-400">{personalInfo.availability}</p>
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary-400">{personalInfo.availability}</p>
             <div className="flex flex-wrap items-center gap-3">
               <Magnetic>
-                <a href={`mailto:${personalInfo.email}`} className="group inline-flex items-center gap-3 rounded-full bg-white px-6 py-4 font-medium text-[var(--color-surface)] hover:bg-primary-500 hover:text-white transition-colors">
+                <a href={`mailto:${personalInfo.email}`} className="group inline-flex items-center gap-3 rounded-full bg-white px-6 py-4 font-medium text-[var(--color-surface)] hover:bg-primary-500 hover:text-on-primary transition-colors">
                   {personalInfo.email}
                   <ArrowUpRight size={18} className="transition-transform group-hover:rotate-45" />
                 </a>
@@ -152,7 +152,7 @@ export default function Contact() {
               </p>
             )}
             <div className="mt-8 flex flex-wrap items-center gap-4">
-              <button type="submit" disabled={status === 'sending'} className="inline-flex items-center gap-2 rounded-full bg-primary-500 px-7 py-4 text-sm font-medium text-[#fff] hover:bg-primary-600 disabled:opacity-60 transition-colors">
+              <button type="submit" disabled={status === 'sending'} className="inline-flex items-center gap-2 rounded-full bg-primary-500 px-7 py-4 text-sm font-medium text-on-primary hover:bg-primary-600 disabled:opacity-60 transition-colors">
                 {status === 'sending' ? <>Sending <Loader2 size={15} className="animate-spin" /></> : <>Send message <Send size={15} /></>}
               </button>
               <span className="text-xs text-white/40">Reply within 24 hours · No spam, ever</span>

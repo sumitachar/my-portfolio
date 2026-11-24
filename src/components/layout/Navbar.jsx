@@ -89,7 +89,7 @@ export default function Navbar({ ready }) {
               <Magnetic className="hidden md:inline-block">
                 <button
                   onClick={() => go('contact')}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-white text-[var(--color-surface)] px-4 py-2 text-sm font-medium hover:bg-primary-500 hover:text-white transition-colors"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-white text-[var(--color-surface)] px-4 py-2 text-sm font-medium hover:bg-primary-500 hover:text-on-primary transition-colors"
                 >
                   Let’s talk <ArrowUpRight size={15} />
                 </button>
