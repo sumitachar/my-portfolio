@@ -81,105 +81,88 @@ export const techStack = [
   { name: "Git", icon: "🔧" },
 ];
 
-import animoraImg from "../assets/projects/animora.jpg";
-import andarmahalImg from "../assets/projects/andarmahal.jpg";
-import techthetaImg from "../assets/projects/techtheta.jpg";
+// Project screenshots: drop an image named after a project's slug into src/assets/projects/
+// (e.g. construction-erp.png) and it shows up on that card automatically.
+const shots = import.meta.glob("../assets/projects/*.{jpg,jpeg,png,webp}", { eager: true, import: "default" });
+const shot = (slug) => {
+  const key = Object.keys(shots).find((k) => k.split("/").pop().replace(/\.[^.]+$/, "") === slug);
+  return key ? shots[key] : undefined;
+};
+
+const graphite = "from-[#232326] to-[#141416]";
 
 export const projects = [
   {
+    id: 1,
+    slug: "animora",
+    title: "Animora Probiotic",
+    description:
+      "Product website for an aquaculture probiotics manufacturer: product catalogue, quote requests and order tracking, built for SEO and speed.",
+    tags: ["Next.js", "TypeScript", "Tailwind CSS"],
+    category: "Business website",
+    live: "https://animoraprobiotic.com",
+  },
+  {
+    id: 3,
+    slug: "andarmahal",
+    title: "Andarmahal Interiors",
+    description:
+      "Interior designer site with scroll-driven storytelling, three languages (English, Bengali, Hindi), a cost calculator and an enquiry flow.",
+    tags: ["React.js", "Laravel"],
+    category: "Business website",
+    live: "https://andarmahal.in",
+  },
+  {
+    id: 4,
+    slug: "techtheta",
+    title: "Techtheta IT Solution",
+    description:
+      "Corporate website for an IT services company, presenting CRM, ERP, AI and mobile services with lead-generation and quote flows.",
+    tags: ["Next.js", "Tailwind CSS"],
+    category: "Corporate website",
+    live: "https://techthetaitsolution.com",
+  },
+  {
     id: 5,
+    slug: "construction-erp",
     title: "Construction ERP Platform",
     description:
       "ERP for civil construction companies: React dashboards, Express.js REST APIs and a PostgreSQL data model covering projects, resources and operations.",
     tags: ["React.js", "Express.js", "PostgreSQL"],
     category: "ERP · In progress",
-    gradient: "from-[#232326] to-[#141416]",
-    github: "#",
-    live: "#",
-    featured: true,
+    private: true,
   },
-
-  {
-    id: 1,
-    title: "Animora Probiotic",
-    description:
-      "SEO optimized healthcare product website built with Next.js, TypeScript and Tailwind CSS.",
-    tags: ["Next.js", "TypeScript", "Tailwind CSS"],
-    category: "Frontend",
-    gradient: "from-[#232326] to-[#141416]",
-    github: "#",
-    live: "https://animoraprobiotic.com",
-    image: animoraImg,
-    featured: true,
-  },
-
   {
     id: 2,
+    slug: "medical-store",
     title: "Medical Store Management System",
     description:
       "Inventory, billing and pharmacy management system with real-time stock management.",
     tags: ["React.js", "NestJS", "PostgreSQL"],
-    category: "Full Stack",
-    gradient: "from-[#232326] to-[#141416]",
-    github: "#",
-    live: "#",
-    featured: true,
+    category: "Business system",
+    private: true,
   },
-
-  {
-    id: 3,
-    title: "Andarmahal",
-    description:
-      "Interior showcase platform with inquiry management and responsive frontend experience.",
-    tags: ["React.js", "Laravel"],
-    category: "Frontend",
-    gradient: "from-[#232326] to-[#141416]",
-    github: "#",
-    live: "https://andarmahal.in",
-    image: andarmahalImg,
-    featured: true,
-  },
-
-  {
-    id: 4,
-    title: "Techtheta IT Solution",
-    description:
-      "Corporate website focused on modern UI/UX and lead generation workflows.",
-    tags: ["Next.js", "Tailwind CSS"],
-    category: "Frontend",
-    gradient: "from-[#232326] to-[#141416]",
-    github: "#",
-    live: "https://techthetaitsolution.com",
-    image: techthetaImg,
-    featured: true,
-  },
-
   {
     id: 6,
+    slug: "stock-analytics",
     title: "Stock Market Analytics Dashboard",
     description:
       "Real-time stock metrics dashboard with Chart.js, drag-and-drop table ordering, filters and lazy-loaded large datasets.",
     tags: ["React.js", "Chart.js", "Data Viz"],
     category: "Dashboard",
-    gradient: "from-[#232326] to-[#141416]",
-    github: "#",
-    live: "#",
-    featured: true,
+    private: true,
   },
-
   {
     id: 7,
+    slug: "economic-portal",
     title: "Economic Data Portal",
     description:
       "Admin dashboard to upload, analyse and visualise economic indicators, with role-based access and cached APIs for faster responses.",
     tags: ["React.js", "RBAC", "API Caching"],
-    category: "Data Platform",
-    gradient: "from-[#232326] to-[#141416]",
-    github: "#",
-    live: "#",
-    featured: true,
+    category: "Data platform",
+    private: true,
   },
-];
+].map((p) => ({ gradient: graphite, github: "#", live: "#", featured: true, ...p, image: shot(p.slug) }));
 
 export const experience = [
   {

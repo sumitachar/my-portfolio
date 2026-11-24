@@ -4,46 +4,68 @@ import { gsap, useGSAP, prefersReducedMotion } from '../../lib/gsap';
 import { projects } from '../../data/portfolio';
 import SectionLabel from './SectionLabel';
 
-/** Abstract "app window" artwork so each card has a visual without screenshots. */
+const host = (url) => url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+
+/** Slim browser frame so real screenshots read as live products. */
+function BrowserBar({ label }) {
+  return (
+    <div className="relative z-[1] flex items-center gap-2 h-7 px-3 bg-[#18181b] border-b border-white/[0.06]">
+      <span className="flex gap-1.5" aria-hidden="true">
+        <span className="w-2 h-2 rounded-full bg-white/15" />
+        <span className="w-2 h-2 rounded-full bg-white/15" />
+        <span className="w-2 h-2 rounded-full bg-white/15" />
+      </span>
+      <span className="mx-auto max-w-[60%] truncate rounded-md bg-white/[0.06] px-3 py-0.5 font-mono text-[10px] text-white/55">{label}</span>
+    </div>
+  );
+}
+
+/** Real screenshot when we have one; otherwise abstract "app window" artwork for private client work. */
 function Preview({ project, index }) {
   if (project.image) {
     return (
-      <div className={`relative h-full w-full overflow-hidden rounded-2xl bg-gradient-to-br ${project.gradient}`}>
-        <img
-          src={project.image}
-          alt={`${project.title} website screenshot`}
-          loading="lazy"
-          className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-        <span className="absolute -bottom-6 -right-2 font-display text-[6rem] md:text-[8rem] font-bold leading-none text-white/15 select-none">
-          0{index + 1}
-        </span>
+      <div className="relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-white/[0.06] bg-[#111113]">
+        <BrowserBar label={project.live && project.live !== '#' ? host(project.live) : project.title} />
+        <div className="relative flex-1 overflow-hidden">
+          <img
+            src={project.image}
+            alt={`${project.title} homepage`}
+            loading="eager"
+            fetchPriority="low"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+          />
+        </div>
       </div>
     );
   }
   return (
-    <div className={`relative h-full w-full overflow-hidden rounded-2xl bg-gradient-to-br ${project.gradient}`}>
+    <div className={`relative h-full w-full overflow-hidden rounded-2xl border border-white/[0.06] bg-gradient-to-br ${project.gradient}`}>
       <div
-        className="absolute inset-0 opacity-25"
+        className="absolute inset-0 opacity-[0.12]"
         style={{ backgroundImage: 'linear-gradient(#fff3 1px, transparent 1px), linear-gradient(90deg, #fff3 1px, transparent 1px)', backgroundSize: '32px 32px' }}
       />
-      <span className="absolute -bottom-6 -right-2 font-display text-[6rem] md:text-[8rem] font-bold leading-none text-white/15 select-none">
+      <span className="absolute -bottom-6 -right-2 font-display text-[6rem] md:text-[8rem] font-bold leading-none text-white/[0.06] select-none">
         0{index + 1}
       </span>
-      <div data-window className="absolute left-[8%] top-[14%] w-[72%] rounded-xl bg-[rgb(255_255_255/0.92)] shadow-2xl shadow-black/30 overflow-hidden">
-        <div className="flex items-center gap-1.5 px-3 py-2 bg-black/5">
-          <span className="w-2 h-2 rounded-full bg-red-400" />
-          <span className="w-2 h-2 rounded-full bg-amber-400" />
-          <span className="w-2 h-2 rounded-full bg-emerald-400" />
-          <span className="ml-3 h-3 flex-1 rounded bg-black/10" />
+      {project.private && (
+        <span className="absolute left-4 top-4 z-[1] inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-black/40 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.15em] text-white/60 backdrop-blur">
+          <span className="w-1.5 h-1.5 rounded-full bg-[rgb(197_232_108)]" /> Private client project
+        </span>
+      )}
+      <div data-window className="absolute left-[10%] top-[24%] w-[70%] rounded-xl bg-[#1c1c1f] border border-white/[0.08] shadow-2xl shadow-black/40 overflow-hidden">
+        <div className="flex items-center gap-1.5 px-3 py-2 border-b border-white/[0.06]">
+          <span className="w-2 h-2 rounded-full bg-white/15" />
+          <span className="w-2 h-2 rounded-full bg-white/15" />
+          <span className="w-2 h-2 rounded-full bg-white/15" />
+          <span className="ml-3 h-2.5 flex-1 rounded bg-white/[0.06]" />
         </div>
         <div className="p-4 space-y-2.5">
-          <div className="h-3 w-1/2 rounded bg-black/20" />
-          <div className="h-2 w-5/6 rounded bg-black/10" />
-          <div className="h-2 w-2/3 rounded bg-black/10" />
+          <div className="h-2.5 w-1/2 rounded bg-white/20" />
+          <div className="h-2 w-5/6 rounded bg-white/10" />
+          <div className="h-2 w-2/3 rounded bg-white/10" />
           <div className="grid grid-cols-3 gap-2 pt-2">
-            {[0, 1, 2].map((i) => <div key={i} className={`h-12 rounded-lg ${i === 0 ? 'bg-[rgb(197_232_108)]' : 'bg-black/10'}`} />)}
+            {[0, 1, 2].map((i) => <div key={i} className={`h-12 rounded-lg ${i === 0 ? 'bg-[rgb(197_232_108)]/80' : 'bg-white/[0.06]'}`} />)}
           </div>
         </div>
       </div>
@@ -60,7 +82,7 @@ function ProjectCard({ project, index }) {
       data-card
       className="glass-pearl group flex h-full w-full flex-col rounded-3xl p-3 md:p-4"
     >
-      <div className={`relative ${project.image ? 'aspect-[1990/1075]' : 'h-[30vh] md:h-[34vh] max-h-[320px]'}`}>
+      <div className="relative aspect-[16/9]">
         <Preview project={project} index={index} />
       </div>
       <div className="flex flex-wrap items-start justify-between gap-4 px-2 pt-4 pb-1">
@@ -158,7 +180,7 @@ export default function Projects() {
             Things I’ve <span className="text-gradient">shipped.</span>
           </h2>
           <p className="mt-6 text-white/50 leading-relaxed">
-            Products I've built for real businesses: ERP, analytics dashboards, healthcare, pharmacy, interiors and corporate sites.
+            Live sites I've shipped for real businesses, plus private systems: ERP, analytics dashboards and pharmacy management.
           </p>
           <p className="mt-10 font-mono text-xs uppercase tracking-[0.25em] text-white/40">Scroll to explore →</p>
         </div>
