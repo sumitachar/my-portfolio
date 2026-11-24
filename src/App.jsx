@@ -1,53 +1,54 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
+import { useState } from 'react';
+import SmoothScroll from './components/site/SmoothScroll';
+import Preloader from './components/site/Preloader';
+import Cursor from './components/site/Cursor';
+import LiquidBackground from './components/site/LiquidBackground';
 import Navbar from './components/layout/Navbar';
+import Hero from './components/site/Hero';
+import Marquee from './components/site/Marquee';
+import About from './components/site/About';
+import Services from './components/site/Services';
+import TrustBar from './components/site/TrustBar';
+import Process from './components/site/Process';
+import FAQ from './components/site/FAQ';
+import CtaBand from './components/site/CtaBand';
+import ChatAssistant from './components/site/ChatAssistant';
+import AdminGate from './components/admin/AdminGate';
+import Projects from './components/site/Projects';
+import Experience from './components/site/Experience';
+import Skills from './components/site/Skills';
+import Contact from './components/site/Contact';
 import Footer from './components/layout/Footer';
-import AnimatedBackground from './components/animations/AnimatedBackground';
-import ParticleField from './components/animations/ParticleField';
-import HomePage from './pages/HomePage';
-import AboutPage from './pages/AboutPage';
-import ProjectsPage from './pages/ProjectsPage';
-import SkillsPage from './pages/SkillsPage';
-import ContactPage from './pages/ContactPage';
-
-const pageVariants = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
-  exit: { opacity: 0, y: -20, transition: { duration: 0.3 } },
-};
-
-function AnimatedRoutes() {
-  const location = useLocation();
-
-  return (
-    <AnimatePresence mode="wait">
-      <motion.div key={location.pathname} variants={pageVariants} initial="initial" animate="animate" exit="exit">
-        <Routes location={location}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/projects" element={<ProjectsPage />} />
-          <Route path="/skills" element={<SkillsPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-        </Routes>
-      </motion.div>
-    </AnimatePresence>
-  );
-}
 
 export default function App() {
+  const [ready, setReady] = useState(false);
+
   return (
-    <BrowserRouter>
-      <div className="relative min-h-screen noise">
-        <ParticleField />
-        <AnimatedBackground />
-        <div className="relative z-10">
-          <Navbar />
-          <main>
-            <AnimatedRoutes />
-          </main>
-          <Footer />
-        </div>
+    <SmoothScroll>
+      <div className="noise relative min-h-screen">
+        <Preloader onDone={() => setReady(true)} />
+        <Cursor />
+        {/* layers: liquid background (z-0) → content (z-2) */}
+        <LiquidBackground />
+        <Navbar ready={ready} />
+        <main className="relative z-[2]">
+          <Hero ready={ready} />
+          <TrustBar />
+          <Marquee />
+          <Services />
+          <Projects />
+          <Process />
+          <About />
+          <Experience />
+          <Skills />
+          <CtaBand />
+          <FAQ />
+          <Contact />
+        </main>
+        <div className="relative z-[2]"><Footer /></div>
+        <ChatAssistant />
+        <AdminGate />
       </div>
-    </BrowserRouter>
+    </SmoothScroll>
   );
 }

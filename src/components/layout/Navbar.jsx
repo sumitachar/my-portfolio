@@ -1,117 +1,118 @@
-import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Code2, Sparkles } from 'lucide-react';
-import { navLinks } from '../../data/portfolio';
-import Button from '../ui/Button';
+import { useEffect, useRef, useState } from 'react';
+import { Menu, X, ArrowUpRight } from 'lucide-react';
+import { navLinks, personalInfo } from '../../data/portfolio';
+import { gsap, useGSAP, ScrollTrigger } from '../../lib/gsap';
+import { useLenis, scrollToId } from '../site/SmoothScroll';
+import ThemeToggle from '../ui/ThemeToggle';
+import Magnetic from '../site/Magnetic';
 
-export default function Navbar() {
+export default function Navbar({ ready }) {
+  const bar = useRef(null);
+  const menu = useRef(null);
+  const lenis = useLenis();
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState('');
   const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const location = useLocation();
 
+  const openRef = useRef(open);
+  openRef.current = open;
+
+  // entrance once the preloader finishes, then hide on scroll down / show on scroll up
+  useGSAP(() => {
+    if (!ready) return;
+    gsap.fromTo(bar.current, { yPercent: -120, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 1, ease: 'expo.out', delay: 0.4 });
+    ScrollTrigger.create({
+      start: 0,
+      end: 'max',
+      onUpdate: (self) => {
+        setScrolled(self.scroll() > 40);
+        if (openRef.current) return;
+        gsap.to(bar.current, { yPercent: self.direction === 1 && self.scroll() > 400 ? -120 : 0, duration: 0.45, ease: 'power3.out', overwrite: 'auto' });
+      },
+    });
+  }, { dependencies: [ready] });
+
+  // highlight the section currently in view
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 30);
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+    const triggers = navLinks.map(({ id }) =>
+      ScrollTrigger.create({
+        trigger: `#${id}`,
+        start: 'top center',
+        end: 'bottom center',
+        onToggle: (self) => self.isActive && setActive(id),
+      }),
+    );
+    return () => triggers.forEach((t) => t.kill());
+  }, [ready]);
+
+  // full-screen mobile menu
+  useGSAP(() => {
+    if (!menu.current) return;
+    if (open) {
+      gsap.set(menu.current, { display: 'flex' });
+      gsap.fromTo(menu.current, { clipPath: 'circle(0% at 100% 0%)' }, { clipPath: 'circle(150% at 100% 0%)', duration: 0.8, ease: 'expo.inOut' });
+      gsap.fromTo('[data-mlink]', { yPercent: 110 }, { yPercent: 0, stagger: 0.06, duration: 0.7, ease: 'expo.out', delay: 0.3 });
+    } else {
+      gsap.to(menu.current, { clipPath: 'circle(0% at 100% 0%)', duration: 0.6, ease: 'expo.inOut', onComplete: () => gsap.set(menu.current, { display: 'none' }) });
+    }
+  }, { dependencies: [open] });
+
+  const go = (id) => {
+    setOpen(false);
+    scrollToId(lenis, id);
+  };
 
   return (
     <>
-      <motion.header
-        initial={{ y: -80, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          scrolled ? 'glass border-b border-white/5 py-3' : 'py-5'
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-accent flex items-center justify-center glow-sm">
-              <Code2 size={18} className="text-white" />
-            </div>
-            <span className="font-display font-bold text-white text-lg group-hover:text-gradient transition-all">
-              Sumit<span className="text-primary-500">.</span>dev
-            </span>
-          </Link>
+      <header ref={bar} className="fixed top-0 inset-x-0 z-50 opacity-0">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 pt-4">
+          <div className={`flex items-center justify-between rounded-2xl px-4 md:px-5 py-3 transition-all duration-500 ${scrolled ? 'glass-pearl' : ''}`}>
+            <button onClick={() => go('top')} className="font-display font-bold text-white text-lg tracking-tight" data-cursor="Top">
+              {personalInfo.name.split(' ')[0]}<span className="text-primary-500">.</span>
+            </button>
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-1">
-            {navLinks.map(link => (
-              <Link key={link.href} to={link.href}>
-                <motion.span
-                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 relative block ${
-                    location.pathname === link.href
-                      ? 'text-white'
-                      : 'text-white/50 hover:text-white'
-                  }`}
-                  whileHover={{ scale: 1.05 }}
+            <nav className="hidden md:flex items-center gap-1" aria-label="Primary">
+              {navLinks.map((l) => (
+                <button
+                  key={l.id}
+                  onClick={() => go(l.id)}
+                  className={`relative px-4 py-2 text-sm rounded-full transition-colors ${active === l.id ? 'text-white' : 'text-white/50 hover:text-white'}`}
                 >
-                  {location.pathname === link.href && (
-                    <motion.span
-                      layoutId="nav-pill"
-                      className="absolute inset-0 bg-white/8 rounded-xl border border-white/10"
-                    />
-                  )}
-                  <span className="relative z-10">{link.label}</span>
-                </motion.span>
-              </Link>
-            ))}
-          </nav>
-
-          {/* CTA */}
-          <div className="hidden md:flex items-center gap-3">
-            <div className="flex items-center gap-2 text-xs text-emerald-400 font-mono">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              Available for work
-            </div>
-            <Button size="sm" href="/contact">
-              <Sparkles size={14} />
-              Hire Me
-            </Button>
-          </div>
-
-          {/* Mobile toggle */}
-          <motion.button
-            className="md:hidden p-2 rounded-xl glass"
-            onClick={() => setMobileOpen(v => !v)}
-            whileTap={{ scale: 0.9 }}
-          >
-            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-          </motion.button>
-        </div>
-      </motion.header>
-
-      {/* Mobile menu */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-x-0 top-[72px] z-40 glass border-b border-white/10 p-6 md:hidden"
-          >
-            <nav className="flex flex-col gap-2">
-              {navLinks.map(link => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={`px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
-                    location.pathname === link.href
-                      ? 'bg-primary-500/20 text-primary-400'
-                      : 'text-white/60 hover:text-white hover:bg-white/5'
-                  }`}
-                >
-                  {link.label}
-                </Link>
+                  {active === l.id && <span className="absolute inset-0 rounded-full bg-white/[0.07] border border-white/10" />}
+                  <span className="relative">{l.label}</span>
+                </button>
               ))}
             </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+
+            <div className="flex items-center gap-2 md:gap-3">
+              <ThemeToggle />
+              <Magnetic className="hidden md:inline-block">
+                <button
+                  onClick={() => go('contact')}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-white text-[var(--color-surface)] px-4 py-2 text-sm font-medium hover:bg-primary-500 hover:text-white transition-colors"
+                >
+                  Let’s talk <ArrowUpRight size={15} />
+                </button>
+              </Magnetic>
+              <button className="md:hidden p-2 rounded-xl glass text-white" onClick={() => setOpen((v) => !v)} aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open}>
+                {open ? <X size={20} /> : <Menu size={20} />}
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div ref={menu} className="fixed inset-0 z-40 hidden flex-col justify-center gap-2 px-8 bg-[var(--color-surface-2)] md:hidden">
+        {navLinks.map((l, i) => (
+          <div key={l.id} className="overflow-hidden">
+            <button data-mlink onClick={() => go(l.id)} className="flex items-baseline gap-4 font-display text-5xl font-semibold text-white">
+              <span className="font-mono text-sm text-primary-400">0{i + 1}</span>
+              {l.label}
+            </button>
+          </div>
+        ))}
+        <p className="mt-10 font-mono text-xs text-white/40">{personalInfo.email}</p>
+      </div>
     </>
   );
 }

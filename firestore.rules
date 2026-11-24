@@ -1,0 +1,49 @@
+rules_version = '2';
+
+// Leads: anyone can CREATE a well-formed enquiry; only the admin can read/update/delete.
+// The admin is the Firebase Auth user whose UID is in isAdmin() below
+// (Firebase console → Authentication → Users → "User UID").
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null && request.auth.uid == 'xDT86xca3DfT4N0keHS22SlxwX93';
+    }
+
+    function optString(data, field, max) {
+      return !(field in data) || (data[field] is string && data[field].size() <= max);
+    }
+
+    function validLead(data) {
+      return data.keys().hasAll(['name', 'email', 'message', 'source', 'status', 'createdAt'])
+        && data.keys().hasOnly(['name', 'email', 'phone', 'service', 'budget', 'timeline', 'design',
+                                'features', 'message', 'source', 'page', 'status', 'createdAt'])
+        && data.name is string && data.name.size() > 0 && data.name.size() <= 100
+        && data.email is string && data.email.size() <= 200
+        && data.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
+        && data.message is string && data.message.size() <= 5000
+        && data.source in ['chatbot', 'contact']
+        && data.status == 'new'
+        && data.createdAt == request.time
+        && optString(data, 'phone', 40)
+        && optString(data, 'service', 100)
+        && optString(data, 'budget', 60)
+        && optString(data, 'timeline', 60)
+        && optString(data, 'design', 100)
+        && optString(data, 'page', 300)
+        && (!('features' in data) || (data.features is list && data.features.size() <= 20));
+    }
+
+    match /leads/{leadId} {
+      allow create: if validLead(request.resource.data);
+      allow read, delete: if isAdmin();
+      allow update: if isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'notes', 'updatedAt']);
+    }
+
+    // Everything else is closed.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
