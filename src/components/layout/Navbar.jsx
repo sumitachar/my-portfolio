@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Menu, X, ArrowUpRight, Flashlight, FlashlightOff } from 'lucide-react';
-import { getTorch, setTorch, torchSupported } from '../../lib/torch';
+import { getTorchMode, setTorchMode, torchSupported } from '../../lib/torch';
 import { navLinks, personalInfo } from '../../data/portfolio';
 import { gsap, useGSAP, ScrollTrigger } from '../../lib/gsap';
 import { useLenis, scrollToId } from '../site/SmoothScroll';
@@ -13,11 +13,11 @@ export default function Navbar({ ready }) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState('');
   const [scrolled, setScrolled] = useState(false);
-  const [torch, setTorchState] = useState(getTorch);
+  const [torch, setTorchState] = useState(() => getTorchMode() === 'on');
   const [canTorch] = useState(torchSupported);
 
   useEffect(() => {
-    const sync = (e) => setTorchState(e.detail);
+    const sync = (e) => setTorchState(e.detail.mode === 'on');
     window.addEventListener('torchchange', sync);
     return () => window.removeEventListener('torchchange', sync);
   }, []);
@@ -95,10 +95,10 @@ export default function Navbar({ ready }) {
             <div className="flex items-center gap-2 md:gap-3">
               {canTorch && (
                 <button
-                  onClick={() => setTorch(!torch)}
+                  onClick={() => setTorchMode(torch ? 'off' : 'on')}
                   aria-pressed={torch}
-                  aria-label={torch ? 'Turn torch light off' : 'Turn torch light on'}
-                  title={torch ? 'Torch on' : 'Torch off'}
+                  aria-label={torch ? 'Switch the lights on' : 'Turn on the torch'}
+                  title={torch ? 'Torch on: click to switch the lights on' : 'Turn on the torch'}
                   className={`grid place-items-center w-9 h-9 rounded-full border transition-colors ${torch ? 'border-primary-500/60 bg-primary-500/15 text-primary-400' : 'border-[var(--line)] text-white/50 hover:text-white'}`}
                 >
                   {torch ? <Flashlight size={16} /> : <FlashlightOff size={16} />}

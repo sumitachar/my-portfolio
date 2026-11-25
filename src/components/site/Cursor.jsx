@@ -53,6 +53,7 @@ export default function Cursor() {
   return (
     <div
       ref={ring}
+      data-cursor-ring
       aria-hidden="true"
       className={`${enabled ? '' : 'hidden'} fixed top-0 left-0 z-[200] pointer-events-none flex items-center justify-center transition-[width,height,border-radius,background-color] duration-300 ${
         label
