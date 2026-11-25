@@ -3,10 +3,11 @@ import { Flashlight, Sun } from 'lucide-react';
 import { getTorchMode, setTorchMode, torchSupported } from '../../lib/torch';
 
 // geometry (px)
-const BEAM_LEN = 430;   // lens → focus pool
+// lens → focus pool: scales with the screen (≈38% of its diagonal), 560–820px
+const beamLengthFor = (w, h) => Math.min(820, Math.max(560, Math.hypot(w, h) * 0.38));
 const BEAM_NEAR = 12;   // beam half-width at the lens
-const FOCUS_R = 200;    // bright focus pool at the end of the beam
-const THROW = 1.4;      // beam keeps going past the focus (× length), fading out
+const FOCUS_R = 240;    // bright focus pool at the end of the beam
+const THROW = 1.55;     // beam keeps going past the focus (× length), fading out
 const NEAR_GLOW = 120;  // soft light around the torch itself
 const GLIMMER = 70;     // faint glow before the torch is switched on
 const FOLLOW = 0.2;     // how smoothly the torch glides after the cursor (lower = smoother)
@@ -112,8 +113,8 @@ export default function Torch({ ready }) {
     const cv = canvas.current;
     if (!supported || mode === 'off' || !cv) return;
     const ctx = cv.getContext('2d');
-    let w = 0, h = 0;
-    const resize = () => { w = cv.width = window.innerWidth; h = cv.height = window.innerHeight; };
+    let w = 0, h = 0, beamLen = 600;
+    const resize = () => { w = cv.width = window.innerWidth; h = cv.height = window.innerHeight; beamLen = beamLengthFor(w, h); };
     resize();
 
     let accent = readAccent();
@@ -167,7 +168,7 @@ export default function Torch({ ready }) {
       ctx.fillRect(x - nearR, y - nearR, nearR * 2, nearR * 2);
 
       if (open > 0.02) {
-        const len = BEAM_LEN * open * flicker;        // lens → focus
+        const len = beamLen * open * flicker;         // lens → focus
         const throwLen = len * THROW;                 // continues past the focus, fading
         const fp = 1 / THROW;                         // focus position along the beam (0–1)
         const focusR = FOCUS_R * (0.35 + 0.65 * open) * (1 + 0.08 * press) * flicker;
