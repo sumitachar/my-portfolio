@@ -2,27 +2,28 @@ import { useEffect, useRef, useState } from 'react';
 import { Flashlight, Sun } from 'lucide-react';
 import { getTorchMode, setTorchMode, torchSupported } from '../../lib/torch';
 
-// beam geometry (px): narrow at the lens, wide at the far end
-const BEAM_LENGTH = 470;
-const BEAM_NEAR = 14;   // half-width at the lens
-const BEAM_FAR = 175;   // half-width at the far end
-const NEAR_GLOW = 95;   // soft light around the torch itself
+// geometry (px)
+const TORCH_LEN = 112;  // handle end → lens
+const BEAM_NEAR = 16;   // beam half-width at the lens
+const FOCUS_R = 170;    // round focus light at the cursor
 const GLIMMER = 70;     // faint glow before the torch is switched on
-// [width scale, strength]: wide faint layers outside, narrow strong ones inside
+const FOLLOW = 0.2;     // how quickly the light catches up with the cursor (0–1)
+// [width scale, strength]: wide faint layers outside, narrow strong ones inside → soft edges
 const SOFT_LAYERS = Array.from({ length: 9 }, (_, i) => [1.36 - i * 0.07, 0.24]);
 
-/** Flashlight drawn horizontally, lens on the right. Lens centre = (50, 15). */
-function FlashlightCursor() {
+/** Hand-held torch, drawn horizontally: handle at x=0, lens at x=112. */
+function HeldTorch() {
   return (
-    <svg width="60" height="30" viewBox="0 0 60 30" fill="none" aria-hidden="true" style={{ position: 'absolute', left: -50, top: -15 }}>
-      {/* body */}
-      <rect x="4" y="10" width="30" height="10" rx="2.5" fill="#1d1d20" stroke="rgba(255,255,255,0.35)" strokeWidth="1" />
+    <svg width="124" height="52" viewBox="0 0 124 52" fill="none" aria-hidden="true" style={{ position: 'absolute', left: 0, top: -26 }}>
+      {/* handle */}
+      <rect x="2" y="17" width="66" height="18" rx="5" fill="#1b1b1e" stroke="rgba(255,255,255,0.28)" strokeWidth="1.2" />
+      {[14, 24, 34, 44].map((x) => <rect key={x} x={x} y="19" width="3" height="14" rx="1.5" fill="rgba(255,255,255,0.08)" />)}
       {/* switch */}
-      <rect x="15" y="8" width="6" height="3" rx="1.2" fill="rgb(var(--primary-500))" />
+      <rect x="50" y="13" width="10" height="5" rx="2" fill="rgb(var(--primary-500))" />
       {/* head, widening toward the lens */}
-      <path d="M34 10 L48 5 L48 25 L34 20 Z" fill="#2a2a2e" stroke="rgb(var(--primary-500))" strokeWidth="1.2" strokeLinejoin="round" />
+      <path d="M68 16 L106 6 L106 46 L68 36 Z" fill="#26262a" stroke="rgb(var(--primary-500))" strokeWidth="1.4" strokeLinejoin="round" />
       {/* glowing lens */}
-      <ellipse cx="49.5" cy="15" rx="2.2" ry="10" fill="rgb(var(--primary-500))" />
+      <ellipse cx="109" cy="26" rx="4" ry="20" fill="rgb(var(--primary-500))" />
     </svg>
   );
 }
@@ -30,7 +31,7 @@ function FlashlightCursor() {
 const readAccent = () =>
   (getComputedStyle(document.documentElement).getPropertyValue('--primary-500').trim() || '197 232 108').split(/\s+/).join(',');
 
-/** Cone from the lens: narrow → wide, ending in a rounded pool of light. */
+/** Cone from the lens to the focus point: narrow at the lens, as wide as the focus light at the end. */
 function beamPath(ctx, x, y, a, len, w0, w1) {
   const dx = Math.cos(a), dy = Math.sin(a);
   const px = -dy, py = dx;
@@ -41,21 +42,21 @@ function beamPath(ctx, x, y, a, len, w0, w1) {
   ctx.ellipse(fx, fy, w1 * 0.55, w1, a, Math.PI / 2, -Math.PI / 2, true);
   ctx.lineTo(x - px * w0, y - py * w0);
   ctx.closePath();
-  return { fx, fy, dx, dy };
+  return { fx, fy };
 }
 
 /**
- * Whole-page torch. First visit starts with the lights off and a prompt; switching the
- * torch on grows a cone-shaped beam from the flashlight, which turns to face the
- * direction the mouse moves. Navbar and chat stay above the darkness.
- * Off on touch devices and for prefers-reduced-motion.
+ * Whole-page torch. First visit starts with the lights off and a prompt. Once on, a torch
+ * held at the bottom of the screen always aims its beam at the cursor and makes a round
+ * focus light there, so steering is as easy as pointing. The light is drawn on a fixed
+ * layer, so two-finger trackpad scrolling keeps it steady under the cursor.
+ * Navbar and chat stay above the darkness. Off on touch devices and for reduced motion.
  */
 export default function Torch({ ready }) {
   const canvas = useRef(null);
   const lamp = useRef(null);
   const [supported] = useState(torchSupported);
   const [mode, setMode] = useState(getTorchMode);
-  const [pressed, setPressed] = useState(false);
   const modeRef = useRef(mode);
 
   useEffect(() => {
@@ -64,7 +65,6 @@ export default function Torch({ ready }) {
     return () => window.removeEventListener('torchchange', sync);
   }, []);
 
-  // hide the native cursor + follower ring while the flashlight cursor is shown
   useEffect(() => {
     modeRef.current = mode;
     const on = supported && mode === 'on';
@@ -82,87 +82,105 @@ export default function Torch({ ready }) {
 
     let accent = readAccent();
     const onPalette = () => setTimeout(() => { accent = readAccent(); }, 2100); // after the 2s theme blend
-    let x = w / 2, y = h / 2, tx = x, ty = y;
-    let ax = x, ay = y;                     // anchor for measuring movement direction
-    let angle = -Math.PI / 3, target = angle;
-    let open = 0;                           // 0 = closed beam, 1 = fully open
+    let tx = w / 2, ty = h * 0.4;   // cursor
+    let x = tx, y = ty;             // smoothed focus point
+    let open = 0;                   // beam grows from the lens (0) to the cursor (1)
+    let press = 0, pressTarget = 0;
     let raf = 0;
     const t0 = performance.now();
 
-    const move = (e) => {
-      tx = e.clientX; ty = e.clientY;
-      const mx = tx - ax, my = ty - ay;
-      if (mx * mx + my * my > 36) { // moved more than 6px: aim the torch that way
-        target = Math.atan2(my, mx);
-        ax = tx; ay = ty;
-      }
-    };
-    const down = () => setPressed(true);
-    const up = () => setPressed(false);
+    // pointer position only changes when the pointer moves; scrolling (incl. two-finger
+    // trackpad scroll) leaves it where it is, so the light stays steady under the cursor
+    const move = (e) => { tx = e.clientX; ty = e.clientY; };
+    const down = () => { pressTarget = 1; };
+    const up = () => { pressTarget = 0; };
 
     const tick = (now) => {
       const on = modeRef.current === 'on';
-      x += (tx - x) * 0.35;
-      y += (ty - y) * 0.35;
-      let diff = target - angle;                       // shortest way round
-      diff = Math.atan2(Math.sin(diff), Math.cos(diff));
-      angle += diff * 0.12;
-      open += ((on ? 1 : 0) - open) * 0.06;            // beam grows small → large
+      x += (tx - x) * FOLLOW;
+      y += (ty - y) * FOLLOW;
+      open += ((on ? 1 : 0) - open) * 0.06;
+      press += (pressTarget - press) * 0.25;
       const t = (now - t0) / 1000;
-      const flicker = 1 + 0.02 * Math.sin(t * 7.3) + 0.01 * Math.sin(t * 17.1);
+      const flicker = 1 + 0.015 * Math.sin(t * 7.3) + 0.007 * Math.sin(t * 17.1);
+
+      // torch held at the bottom centre, pointing at the focus point
+      const bx = w / 2, by = h + 24;
+      const a = Math.atan2(y - by, x - bx);
+      const lx = bx + Math.cos(a) * TORCH_LEN, ly = by + Math.sin(a) * TORCH_LEN;
+      const dist = Math.hypot(x - lx, y - ly);
+      const focusR = FOCUS_R * (0.35 + 0.65 * open) * (1 + 0.08 * press) * flicker;
 
       ctx.globalCompositeOperation = 'source-over';
       ctx.clearRect(0, 0, w, h);
       ctx.fillStyle = `rgba(0,0,0,${on ? 0.9 : 0.95})`;
       ctx.fillRect(0, 0, w, h);
-
-      // cut the light out of the darkness
       ctx.globalCompositeOperation = 'destination-out';
-      const nearR = (on ? NEAR_GLOW : GLIMMER) * (0.6 + 0.4 * Math.max(open, on ? 0 : 1)) * flicker;
-      const g0 = ctx.createRadialGradient(x, y, 0, x, y, nearR);
-      g0.addColorStop(0, `rgba(0,0,0,${on ? 0.85 : 0.5})`);
-      g0.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.fillStyle = g0;
-      ctx.fillRect(x - nearR, y - nearR, nearR * 2, nearR * 2);
 
-      if (open > 0.01) {
-        const len = BEAM_LENGTH * open * flicker;
-        // many thin layered cones give the beam smooth, soft edges
-        SOFT_LAYERS.forEach(([k, m]) => {
-          const { fx, fy } = beamPath(ctx, x, y, angle, len, BEAM_NEAR * k, BEAM_FAR * k * open * flicker);
-          const g = ctx.createLinearGradient(x, y, fx, fy);
-          g.addColorStop(0, `rgba(0,0,0,${0.4 * m})`);
-          g.addColorStop(0.3, `rgba(0,0,0,${0.85 * m})`);
-          g.addColorStop(1, `rgba(0,0,0,${0.95 * m})`);
-          ctx.fillStyle = g;
-          ctx.fill();
-        });
+      if (open < 0.02) {
+        // before the torch is on: a faint glimmer around the cursor
+        const g = ctx.createRadialGradient(x, y, 0, x, y, GLIMMER);
+        g.addColorStop(0, 'rgba(0,0,0,0.5)');
+        g.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = g;
+        ctx.fillRect(x - GLIMMER, y - GLIMMER, GLIMMER * 2, GLIMMER * 2);
+      } else {
+        const len = dist * open;
+        const w1 = focusR * 0.72;
+        // beam: many thin layered cones for smooth soft edges
+        if (len > 4) {
+          SOFT_LAYERS.forEach(([k, m]) => {
+            const { fx, fy } = beamPath(ctx, lx, ly, a, len, BEAM_NEAR * k, w1 * k);
+            const g = ctx.createLinearGradient(lx, ly, fx, fy);
+            g.addColorStop(0, `rgba(0,0,0,${0.45 * m})`);
+            g.addColorStop(0.5, `rgba(0,0,0,${0.7 * m})`);
+            g.addColorStop(1, `rgba(0,0,0,${0.9 * m})`);
+            ctx.fillStyle = g;
+            ctx.fill();
+          });
+        }
+        // focus light: bright round pool where the beam lands
+        const fx = lx + Math.cos(a) * len, fy = ly + Math.sin(a) * len;
+        const fg = ctx.createRadialGradient(fx, fy, 0, fx, fy, focusR);
+        fg.addColorStop(0, 'rgba(0,0,0,1)');
+        fg.addColorStop(0.45, 'rgba(0,0,0,0.95)');
+        fg.addColorStop(0.75, 'rgba(0,0,0,0.5)');
+        fg.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = fg;
+        ctx.fillRect(fx - focusR, fy - focusR, focusR * 2, focusR * 2);
 
-        // faint warm tint in the theme colour
+        // warm tint in the theme colour
         ctx.globalCompositeOperation = 'source-over';
-        const { fx, fy } = beamPath(ctx, x, y, angle, len, BEAM_NEAR, BEAM_FAR * open * flicker);
-        const tint = ctx.createLinearGradient(x, y, fx, fy);
-        tint.addColorStop(0, `rgba(${accent},0.12)`);
-        tint.addColorStop(1, `rgba(${accent},0.03)`);
-        ctx.fillStyle = tint;
-        ctx.fill();
+        if (len > 4) {
+          const { fx: ex, fy: ey } = beamPath(ctx, lx, ly, a, len, BEAM_NEAR, w1);
+          const tint = ctx.createLinearGradient(lx, ly, ex, ey);
+          tint.addColorStop(0, `rgba(${accent},0.1)`);
+          tint.addColorStop(1, `rgba(${accent},0.02)`);
+          ctx.fillStyle = tint;
+          ctx.fill();
+        }
+        const ft = ctx.createRadialGradient(fx, fy, 0, fx, fy, focusR);
+        ft.addColorStop(0, `rgba(${accent},${0.07 + 0.05 * press})`);
+        ft.addColorStop(1, `rgba(${accent},0)`);
+        ctx.fillStyle = ft;
+        ctx.fillRect(fx - focusR, fy - focusR, focusR * 2, focusR * 2);
       }
 
-      if (lamp.current) lamp.current.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${angle}rad)`;
+      if (lamp.current) lamp.current.style.transform = `translate3d(${bx}px, ${by}px, 0) rotate(${a}rad)`;
       raf = requestAnimationFrame(tick);
     };
 
     window.addEventListener('resize', resize);
-    window.addEventListener('mousemove', move, { passive: true });
-    window.addEventListener('mousedown', down);
-    window.addEventListener('mouseup', up);
+    window.addEventListener('pointermove', move, { passive: true });
+    window.addEventListener('pointerdown', down);
+    window.addEventListener('pointerup', up);
     window.addEventListener('palettechange', onPalette);
     raf = requestAnimationFrame(tick);
     return () => {
       window.removeEventListener('resize', resize);
-      window.removeEventListener('mousemove', move);
-      window.removeEventListener('mousedown', down);
-      window.removeEventListener('mouseup', up);
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerdown', down);
+      window.removeEventListener('pointerup', up);
       window.removeEventListener('palettechange', onPalette);
       cancelAnimationFrame(raf);
     };
@@ -184,14 +202,14 @@ export default function Torch({ ready }) {
         className={`fixed inset-0 z-[45] h-full w-full pointer-events-none transition-opacity duration-1000 ${dark ? 'opacity-100' : 'opacity-0'}`}
       />
 
-      {/* flashlight cursor, rotated to face the beam (only while the torch is on) */}
-      {mode === 'on' && (
-        <div ref={lamp} className="fixed left-0 top-0 z-[210] pointer-events-none will-change-transform" aria-hidden="true">
-          <div className={`transition-transform duration-150 ${pressed ? 'scale-90' : 'scale-100'}`}>
-            <FlashlightCursor />
-          </div>
-        </div>
-      )}
+      {/* the torch itself, held at the bottom of the screen and aimed at the cursor */}
+      <div
+        ref={lamp}
+        className={`fixed left-0 top-0 z-[46] pointer-events-none will-change-transform transition-opacity duration-700 ${mode === 'on' && ready ? 'opacity-100' : 'opacity-0'}`}
+        aria-hidden="true"
+      >
+        <HeldTorch />
+      </div>
 
       {/* first-visit prompt */}
       <div
@@ -212,7 +230,7 @@ export default function Torch({ ready }) {
           <p className="mt-7 font-display text-3xl md:text-4xl font-semibold tracking-[-0.03em] text-white">
             The lights are <span className="text-gradient">off.</span>
           </p>
-          <p className="mt-3 text-white/55 leading-relaxed">Turn on the torch and move your mouse to explore my work.</p>
+          <p className="mt-3 text-white/55 leading-relaxed">Turn on the torch and point anywhere to explore my work.</p>
           <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
             <button
               type="button"
