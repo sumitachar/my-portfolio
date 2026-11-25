@@ -98,7 +98,7 @@ export default function Navbar({ ready }) {
                   onClick={() => setTorchMode(torch ? 'off' : 'on')}
                   aria-pressed={torch}
                   aria-label={torch ? 'Switch the lights on' : 'Turn on the torch'}
-                  title={torch ? 'Torch on: click to switch the lights on' : 'Turn on the torch'}
+                  title={torch ? 'Torch on: click (or double-click anywhere) to switch the lights on' : 'Turn on the torch (or double-click anywhere)'}
                   className={`grid place-items-center w-9 h-9 rounded-full border transition-colors ${torch ? 'border-primary-500/60 bg-primary-500/15 text-primary-400' : 'border-[var(--line)] text-white/50 hover:text-white'}`}
                 >
                   {torch ? <Flashlight size={16} /> : <FlashlightOff size={16} />}

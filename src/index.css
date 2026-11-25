@@ -152,5 +152,6 @@ a.glass-pearl:hover, button.glass-pearl:hover, .glass-pearl.spotlight:hover { bo
 /* outlined text that stays legible (used in the About values ticker) */
 .text-outline-strong { color: transparent; -webkit-text-stroke: 1px rgb(var(--white) / 0.4); }
 
-/* torch mode: the focus light marks the cursor, so the follower ring is hidden */
+/* torch mode: the flashlight (plus a precise dot) replaces the cursor */
+html.torch-on, html.torch-on * { cursor: none !important; }
 html.torch-on [data-cursor-ring] { display: none !important; }
