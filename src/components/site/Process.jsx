@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { MessagesSquare, FileCheck2, Hammer, Rocket, ArrowUpRight } from 'lucide-react';
 import { gsap, useGSAP, ScrollTrigger, prefersReducedMotion } from '../../lib/gsap';
 import { scramble } from '../../lib/scramble';
+import { drawIcon } from '../../lib/draw';
 import { processSteps } from '../../data/portfolio';
 import SectionLabel from './SectionLabel';
 import Magnetic from './Magnetic';
@@ -9,18 +10,6 @@ import { openAssistant } from '../../lib/assistant';
 
 const ICONS = [MessagesSquare, FileCheck2, Hammer, Rocket];
 const pad = (n) => String(n).padStart(2, '0');
-
-/** Redraw an icon stroke by stroke. */
-function drawIcon(svg) {
-  svg?.querySelectorAll('path, circle, rect, line, polyline, polygon').forEach((el) => {
-    const len = el.getTotalLength?.() || 0;
-    if (!len) return;
-    gsap.fromTo(el, { strokeDasharray: len, strokeDashoffset: len }, {
-      strokeDashoffset: 0, duration: 1.1, ease: 'power2.inOut', overwrite: true,
-      onComplete: () => gsap.set(el, { clearProps: 'strokeDasharray,strokeDashoffset' }),
-    });
-  });
-}
 
 export default function Process() {
   const root = useRef(null);
