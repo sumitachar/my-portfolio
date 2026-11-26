@@ -1,6 +1,7 @@
 rules_version = '2';
 
 // Leads: anyone can CREATE a well-formed enquiry; only the admin can read/update/delete.
+// Content: anyone can read the site content; only the admin can change it.
 // The admin is the Firebase Auth user whose UID is in isAdmin() below
 // (Firebase console → Authentication → Users → "User UID").
 service cloud.firestore {
@@ -39,6 +40,15 @@ service cloud.firestore {
       allow read, delete: if isAdmin();
       allow update: if isAdmin()
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'notes', 'updatedAt']);
+    }
+
+    // Site content edited in the admin panel: public read, admin-only write.
+    match /content/{docId} {
+      allow read: if docId == 'site';
+      allow write: if isAdmin() && docId == 'site'
+        && request.resource.data.keys().hasOnly(['json', 'updatedAt'])
+        && request.resource.data.json is string
+        && request.resource.data.json.size() < 900000;
     }
 
     // Everything else is closed.

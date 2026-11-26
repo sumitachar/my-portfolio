@@ -45,6 +45,18 @@ Open it by typing the `VITE_ADMIN_KEY` word anywhere on the site (outside a text
 
 The key only reveals the sign-in screen. Access to leads is enforced by Firebase Auth and the Firestore rules.
 
+## Editing content (no code needed)
+
+Open the admin panel, sign in and switch to the **Content** tab. Every section of the site can be edited there:
+Profile, Stats, Trust points, Services, Projects, Process, Experience, Stack, Tech ticker and FAQ.
+Add, remove, reorder or duplicate items, then press **Save & publish** and reload the site.
+
+- Content is stored in Firestore (`content/site`); the values in `src/data/portfolio.js` are the built-in defaults
+  and are used whenever nothing has been saved or Firestore can't be reached.
+- **Reset section** restores a section's built-in default (publish to apply).
+- Project screenshots: put an image named after the project's slug in `src/assets/projects/`, or paste an image URL
+  in the project's *Screenshot URL* field.
+
 ## Scripts
 
 | Command | What it does |

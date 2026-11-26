@@ -74,7 +74,9 @@ export const FAQ_ANSWERS = [
   {
     label: 'Talk to Sumit directly',
     keywords: ['call', 'talk', 'human', 'person', 'phone', 'email', 'whatsapp', 'contact', 'meet', 'sumit'],
-    answer: `You can email Sumit directly at ${personalInfo.email}.\n\nOr start a project here: he reads every request personally and replies within 24 hours.`,
+    get answer() {
+      return `You can email Sumit directly at ${personalInfo.email}.\n\nOr start a project here: he reads every request personally and replies within 24 hours.`;
+    },
   },
 ];
 

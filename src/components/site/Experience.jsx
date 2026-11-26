@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { gsap, useGSAP, ScrollTrigger, prefersReducedMotion } from '../../lib/gsap';
+import { ArrowUpRight } from 'lucide-react';
 import { scramble } from '../../lib/scramble';
 import { experience } from '../../data/portfolio';
 import SectionLabel from './SectionLabel';
@@ -115,6 +116,26 @@ export default function Experience() {
                   {job.company}
                   <span data-underline className="absolute left-0 -bottom-0.5 h-px w-full origin-left bg-primary-500/70" aria-hidden="true" />
                 </p>
+
+                {/* promotion within the same company: earliest role → current role */}
+                {job.roles?.length > 1 && (
+                  <div data-fade className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-500/15 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.15em] text-primary-400">
+                      <ArrowUpRight size={12} /> Promoted
+                    </span>
+                    <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-xs">
+                      {[...job.roles].reverse().map((r, i, all) => (
+                        <li key={r.title} className="flex items-center gap-2">
+                          <span className={i === all.length - 1 ? 'text-white/90' : 'text-white/50'}>
+                            {r.title} <span className="text-white/35">· {r.period}</span>
+                          </span>
+                          {i < all.length - 1 && <span className="text-primary-400" aria-hidden="true">→</span>}
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
+
                 <p data-fade className="mt-5 max-w-2xl text-white/60 leading-relaxed">{job.description}</p>
                 <ul className="mt-6 flex flex-wrap gap-2">
                   {job.highlights.map((h) => (

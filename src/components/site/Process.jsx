@@ -121,7 +121,7 @@ export default function Process() {
             </span>
 
             {processSteps.map((s, i) => {
-              const Icon = ICONS[i];
+              const Icon = ICONS[i % ICONS.length];
               return (
                 <li key={s.step} data-step data-state="todo" className="group relative">
                   <div className="relative z-[1] mb-6 flex items-center gap-3">

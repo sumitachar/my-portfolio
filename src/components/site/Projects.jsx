@@ -8,8 +8,11 @@ const host = (url) => url.replace(/^https?:\/\//, '').replace(/\/$/, '');
 const isLive = (p) => p.live && p.live !== '#';
 const pad = (n) => String(n).padStart(2, '0');
 
-const featured = projects.filter((p) => p.image && isLive(p));
-const others = projects.filter((p) => !featured.includes(p));
+/** Live projects with a screenshot get the big panels; the rest go in the private index. */
+const splitProjects = () => {
+  const featured = projects.filter((p) => p.image && isLive(p));
+  return { featured, others: projects.filter((p) => !featured.includes(p)) };
+};
 
 /** Abstract "app window" artwork for private work without public screenshots. */
 function MockArt({ project }) {
@@ -121,7 +124,7 @@ function FeatureCard({ project, index, total }) {
 }
 
 /** Typographic index of private work; a preview card follows the cursor on hover. */
-function PrivateIndex() {
+function PrivateIndex({ others, offset }) {
   const wrap = useRef(null);
   const preview = useRef(null);
   const [active, setActive] = useState(null);
@@ -154,7 +157,7 @@ function PrivateIndex() {
         {others.map((p, i) => (
           <li key={p.id} data-index-row className="border-b border-[var(--line)]" onMouseEnter={() => setActive(p.id)}>
             <div className="group grid grid-cols-[auto_1fr_auto] md:grid-cols-[60px_1.4fr_1fr_auto] items-center gap-4 md:gap-8 py-6 md:py-8">
-              <span className="font-mono text-xs text-white/35">{pad(featured.length + i + 1)}</span>
+              <span className="font-mono text-xs text-white/35">{pad(offset + i + 1)}</span>
               <div>
                 <h4 className={`font-display text-2xl md:text-4xl font-semibold tracking-[-0.03em] transition-all duration-500 ${active === p.id ? 'text-white translate-x-2' : active ? 'text-white/30' : 'text-white/85'}`}>
                   {p.title}
@@ -189,6 +192,7 @@ function PrivateIndex() {
 
 export default function Projects() {
   const root = useRef(null);
+  const { featured, others } = splitProjects();
 
   useGSAP(() => {
     if (prefersReducedMotion()) return;
@@ -222,10 +226,13 @@ export default function Projects() {
       });
     });
 
-    gsap.from(q('[data-index-row]'), {
-      y: 40, opacity: 0, duration: 0.9, stagger: 0.08, ease: 'expo.out',
-      scrollTrigger: { trigger: q('[data-index-row]')[0], start: 'top 85%' },
-    });
+    const rows = q('[data-index-row]');
+    if (rows.length) {
+      gsap.from(rows, {
+        y: 40, opacity: 0, duration: 0.9, stagger: 0.08, ease: 'expo.out',
+        scrollTrigger: { trigger: rows[0], start: 'top 85%' },
+      });
+    }
     return () => mm.revert();
   }, { scope: root });
 
@@ -244,10 +251,10 @@ export default function Projects() {
         </div>
 
         <div>
-          {featured.map((p, i) => <FeatureCard key={p.id} project={p} index={i} total={projects.length} />)}
+          {featured.map((p, i) => <FeatureCard key={p.id ?? p.slug ?? i} project={p} index={i} total={projects.length} />)}
         </div>
 
-        <PrivateIndex />
+        {others.length > 0 && <PrivateIndex others={others} offset={featured.length} />}
       </div>
     </section>
   );

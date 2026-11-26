@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
-  X, LogOut, Lock, Search, Download, Inbox, Mail, Phone, MessageCircle, Copy, Check, Trash2, ArrowLeft, Bot, FileText, AlertTriangle,
+  X, LogOut, Lock, PenSquare, Search, Download, Inbox, Mail, Phone, MessageCircle, Copy, Check, Trash2, ArrowLeft, Bot, FileText, AlertTriangle,
 } from 'lucide-react';
 import { getAuthApi, getFirestoreApi, isFirebaseConfigured } from '../../lib/firebase';
 import { LEAD_STATUSES, leadToText } from '../../lib/leads';
+import ContentEditor from './ContentEditor';
 
 const STATUS_STYLE = {
   new: 'bg-sky-400/15 text-sky-300 border-sky-400/30',
@@ -127,6 +128,7 @@ function Dashboard({ user, onClose }) {
   const [filter, setFilter] = useState('all');
   const [query, setQuery] = useState('');
   const [selectedId, setSelectedId] = useState(null);
+  const [tab, setTab] = useState('leads'); // leads | content
   const [loadedAt, setLoadedAt] = useState(0);
 
   // live subscription to the leads collection
@@ -189,21 +191,37 @@ function Dashboard({ user, onClose }) {
       {/* top bar */}
       <header className="shrink-0 flex flex-wrap items-center gap-3 border-b border-[var(--line)] px-5 py-4">
         <div className="flex items-center gap-3 mr-auto">
-          <span className="grid place-items-center w-10 h-10 rounded-xl bg-primary-500/15 text-primary-400"><Inbox size={18} /></span>
+          <span className="grid place-items-center w-10 h-10 rounded-xl bg-primary-500/15 text-primary-400">{tab === 'leads' ? <Inbox size={18} /> : <PenSquare size={18} />}</span>
           <div>
-            <h1 className="font-display text-lg font-semibold leading-tight">Leads</h1>
+            <h1 className="font-display text-lg font-semibold leading-tight">Admin</h1>
             <p className="text-xs text-white/45">{user.email}</p>
           </div>
+          <div className="ml-4 flex rounded-full border border-[var(--line)] p-1" role="tablist" aria-label="Admin sections">
+            {[['leads', 'Leads'], ['content', 'Content']].map(([id, label]) => (
+              <button
+                key={id}
+                role="tab"
+                aria-selected={tab === id}
+                onClick={() => setTab(id)}
+                className={`rounded-full px-4 py-1.5 text-sm transition-colors ${tab === id ? 'bg-primary-500 text-on-primary' : 'text-white/60 hover:text-white'}`}
+              >
+                {label}{id === 'leads' && counts.new ? <span className="ml-1.5 opacity-70">{counts.new}</span> : null}
+              </button>
+            ))}
+          </div>
         </div>
-        <button onClick={exportCsv} disabled={!visible.length} className="inline-flex items-center gap-2 rounded-full border border-[var(--line)] px-4 py-2 text-sm text-white/70 hover:text-white disabled:opacity-40">
-          <Download size={15} /> Export CSV
-        </button>
+        {tab === 'leads' && (
+          <button onClick={exportCsv} disabled={!visible.length} className="inline-flex items-center gap-2 rounded-full border border-[var(--line)] px-4 py-2 text-sm text-white/70 hover:text-white disabled:opacity-40">
+            <Download size={15} /> Export CSV
+          </button>
+        )}
         <button onClick={signOut} className="inline-flex items-center gap-2 rounded-full border border-[var(--line)] px-4 py-2 text-sm text-white/70 hover:text-white">
           <LogOut size={15} /> Sign out
         </button>
         <button onClick={onClose} className="p-2 rounded-xl text-white/50 hover:text-white hover:bg-white/5" aria-label="Close admin"><X size={20} /></button>
       </header>
 
+      {tab === 'content' ? <ContentEditor /> : (<>
       {/* stats */}
       <div className="shrink-0 grid grid-cols-2 md:grid-cols-4 gap-3 px-5 pt-4">
         {[['Total leads', counts.all], ['New', counts.new], ['This week', counts.week], ['Won', counts.won]].map(([label, value]) => (
@@ -260,6 +278,7 @@ function Dashboard({ user, onClose }) {
           {selected ? <LeadDetail key={selected.id} lead={selected} onBack={() => setSelectedId(null)} /> : <p className="text-sm text-white/40">Select a lead to see the details.</p>}
         </div>
       </div>
+      </>)}
     </>
   );
 }

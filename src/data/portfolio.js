@@ -1,4 +1,4 @@
-export const personalInfo = {
+export let personalInfo = {
   name: "Sumit Achar",
   role: "Full-Stack Developer & Tech Partner",
   tagline: "Idea to launch for startups & businesses",
@@ -11,7 +11,7 @@ export const personalInfo = {
   coreStack: ["React", "Next.js", "TypeScript", "NestJS", "PostgreSQL"],
 };
 
-export const stats = [
+export let stats = [
   {
     value: 3,
     suffix: "+",
@@ -34,7 +34,7 @@ export const stats = [
   },
 ];
 
-export const services = [
+export let services = [
   { title: "Business websites & landing pages", text: "Fast, SEO-ready sites that explain what you do and turn visitors into enquiries.", tags: ["Landing pages", "SEO", "CMS / blog", "Analytics"] },
   { title: "Web apps, SaaS & MVPs", text: "From first prototype to a production product your users can sign up for and pay for.", tags: ["Auth & roles", "Subscriptions", "Dashboards", "REST APIs"] },
   { title: "Mobile apps", text: "Android and iOS apps, delivered with my network of mobile developers and designers.", tags: ["Android", "iOS", "Push notifications", "Store launch"] },
@@ -67,14 +67,14 @@ export const skills = [
   { name: "Data Visualization", level: 85, color: "#F97316" },
 ];
 
-export const stackLayers = [
+export let stackLayers = [
   { layer: "Frontend", note: "Interfaces people enjoy using", items: ["React.js", "Next.js", "TypeScript", "JavaScript", "Tailwind CSS", "Redux Toolkit"] },
   { layer: "Backend", note: "APIs and business logic", items: ["Node.js", "NestJS", "Express.js", "REST APIs", "JWT auth"] },
   { layer: "Data", note: "Storage, reporting and charts", items: ["PostgreSQL", "Chart.js", "Recharts", "Data tables"] },
   { layer: "Craft", note: "How it ships", items: ["Performance", "Responsive & accessible", "Reusable components", "Git"] },
 ];
 
-export const techStack = [
+export let techStack = [
   { name: "React", icon: "⚛️" },
   { name: "Next.js", icon: "▲" },
   { name: "TypeScript", icon: "📘" },
@@ -98,7 +98,7 @@ const shot = (slug) => {
 
 const graphite = "from-[#232326] to-[#141416]";
 
-export const projects = [
+const projectsDefault = [
   {
     id: 1,
     slug: "animora",
@@ -169,9 +169,15 @@ export const projects = [
     category: "Data platform",
     private: true,
   },
-].map((p) => ({ gradient: graphite, github: "#", live: "#", featured: true, ...p, image: shot(p.slug) }));
+];
 
-export const experience = [
+/** Fill in defaults and resolve the screenshot: an uploaded/linked imageUrl wins, else a bundled file named after the slug. */
+const hydrateProjects = (list) =>
+  list.map((p, i) => ({ gradient: graphite, github: "#", live: "#", featured: true, ...p, id: p.id ?? i + 1, image: p.imageUrl || shot(p.slug) }));
+
+export let projects = hydrateProjects(projectsDefault);
+
+export let experience = [
   {
     role: "Software Engineer",
     company: "Rajwada Infotech",
@@ -189,27 +195,19 @@ export const experience = [
   {
     role: "Full Stack Engineer",
     company: "Techtheta IT Solution",
-    period: "Apr 2025 - Aug 2026",
+    period: "Dec 2023 - Aug 2026",
+    // promoted within the company: newest role first
+    roles: [
+      { title: "Full Stack Engineer", period: "Apr 2025 - Aug 2026" },
+      { title: "Software Engineer", period: "Dec 2023 - Apr 2025" },
+    ],
     description:
-      "Developed scalable web applications with React.js, Next.js, TypeScript, NestJS and PostgreSQL. Designed REST APIs with secure JWT authentication, built dashboards and data visualization, and improved performance with lazy loading and reusable architecture.",
+      "Started on a family wellness platform (Next.js, TypeScript, Tailwind CSS): reusable UI component libraries, JWT authentication, personalised dashboards and Recharts analytics, cutting page load time by ~30%. Promoted to Full Stack Engineer to build scalable apps end to end with React.js, Next.js, NestJS and PostgreSQL, secure REST APIs and data visualization.",
     highlights: [
+      "Promoted in 16 months",
       "NestJS + PostgreSQL",
       "JWT Auth & Authorization",
-      "Data Visualization",
-      "Reusable Architecture",
-    ],
-  },
-
-  {
-    role: "Software Engineer",
-    company: "Techtheta IT Solution",
-    period: "Dec 2023 - Apr 2025",
-    description:
-      "Built a family wellness platform with Next.js, TypeScript and Tailwind CSS. Created reusable UI component libraries, JWT authentication, personalised dashboards and Recharts analytics, and cut page load time by ~30%.",
-    highlights: [
-      "Family Wellness Platform",
       "UI Component Library",
-      "Recharts Analytics",
       "~30% Faster Page Loads",
     ],
   },
@@ -229,21 +227,21 @@ export const experience = [
   },
 ];
 
-export const trustPoints = [
+export let trustPoints = [
   { title: "Free estimate in 24h", text: "Scope, timeline and cost, no obligation" },
   { title: "Clear scope up front", text: "Agreed before any code is written" },
   { title: "Regular demos", text: "See working progress, no surprises" },
   { title: "You own the code", text: "Clean, documented, fully handed over" },
 ];
 
-export const processSteps = [
+export let processSteps = [
   { step: "01", title: "Free consultation", text: "Tell me about your business and goals by chat, call or email. I ask the right questions so nothing important is missed.", time: "Day 1" },
   { step: "02", title: "Clear proposal", text: "You get a written scope, timeline and cost. We agree on everything before work starts.", time: "Within 24–48h" },
   { step: "03", title: "Design & build", text: "I build in short milestones and share regular demos, so you can give feedback early.", time: "Milestone by milestone" },
   { step: "04", title: "Launch & support", text: "I deploy, hand over all code and docs, and stay available for fixes, improvements and support.", time: "Launch day & beyond" },
 ];
 
-export const faqs = [
+export let faqs = [
   {
     q: "How much does a project cost?",
     a: "It depends on scope. A business website costs far less than a SaaS platform or ERP. Share your requirements through the project assistant or the contact form and you'll get a clear quote with scope and timeline within 24 hours, free and with no obligation.",
@@ -278,3 +276,46 @@ export const navLinks = [
   { label: "FAQ", id: "faq" },
   { label: "Contact", id: "contact" },
 ];
+
+/* ------------------------------------------------------------------ *
+ * Editable content
+ * The values above are the built-in defaults. Content saved from the
+ * admin panel (Firestore doc content/site) is applied over them before
+ * the site renders; the exports are live bindings, so every component
+ * reads the edited values.
+ * ------------------------------------------------------------------ */
+
+export const EDITABLE_SECTIONS = ['personalInfo', 'stats', 'trustPoints', 'services', 'projects', 'processSteps', 'experience', 'stackLayers', 'techStack', 'faqs'];
+
+const clone = (v) => JSON.parse(JSON.stringify(v));
+const stripProject = ({ image, gradient, github, featured, ...rest }) => rest; // eslint-disable-line no-unused-vars
+
+const DEFAULTS = clone({
+  personalInfo, stats, trustPoints, services, projects: projectsDefault, processSteps, experience, stackLayers, techStack, faqs,
+});
+
+/** Built-in default for one section (used by "Reset section" in the editor). */
+export const getDefaultSection = (key) => clone(DEFAULTS[key]);
+
+/** Current content as plain JSON (what the editor edits and what gets saved). */
+export function getEditableContent() {
+  return clone({
+    personalInfo, stats, trustPoints, services, projects: projects.map(stripProject), processSteps, experience, stackLayers, techStack, faqs,
+  });
+}
+
+/** Apply saved content over the defaults. Unknown or malformed sections are ignored. */
+export function applyContent(c) {
+  if (!c || typeof c !== 'object') return;
+  const arr = (k) => (Array.isArray(c[k]) ? c[k] : null);
+  if (c.personalInfo && typeof c.personalInfo === 'object') personalInfo = { ...DEFAULTS.personalInfo, ...c.personalInfo };
+  if (arr('stats')) stats = c.stats;
+  if (arr('trustPoints')) trustPoints = c.trustPoints;
+  if (arr('services')) services = c.services;
+  if (arr('projects')) projects = hydrateProjects(c.projects);
+  if (arr('processSteps')) processSteps = c.processSteps;
+  if (arr('experience')) experience = c.experience;
+  if (arr('stackLayers')) stackLayers = c.stackLayers;
+  if (arr('techStack')) techStack = c.techStack;
+  if (arr('faqs')) faqs = c.faqs;
+}
