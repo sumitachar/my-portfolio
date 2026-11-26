@@ -1,7 +1,9 @@
 import { useMemo, useState } from 'react';
 import { ChevronDown, ChevronUp, Copy, Plus, RotateCcw, Trash2, X, Check, RefreshCw, AlertTriangle } from 'lucide-react';
 import { getDefaultSection } from '../../data/portfolio';
-import { getEditableContent, saveContent } from '../../lib/content';
+import { getEditableContent, saveContent, contentStatus } from '../../lib/content';
+
+const when = (iso) => (iso ? new Intl.DateTimeFormat('en-IN', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(iso)) : '');
 
 /* ---------------- schema: what can be edited, and how ---------------- */
 const text = (label, hint) => ({ type: 'text', label, hint });
@@ -259,8 +261,10 @@ export default function ContentEditor() {
           )}
           {status.kind === 'error' && <span className="inline-flex items-center gap-2 text-rose-300"><AlertTriangle size={15} /> {status.message}</span>}
           {status.kind === 'idle' && (dirtyKeys.size
-            ? <span className="text-amber-300">Unsaved changes in {dirtyKeys.size} section{dirtyKeys.size > 1 ? 's' : ''}</span>
-            : <span className="text-white/45">All changes published</span>)}
+            ? <span className="text-amber-300">Unsaved changes in {dirtyKeys.size} section{dirtyKeys.size > 1 ? 's' : ''}. Press Save &amp; publish to put them live.</span>
+            : contentStatus.source === 'saved'
+              ? <span className="text-white/45">No unsaved changes · live version published {when(contentStatus.updatedAt)}</span>
+              : <span className="text-white/55">The site is showing its built-in content. Edit any field, then press <span className="text-white">Save &amp; publish</span>.</span>)}
         </p>
         <button type="button" onClick={() => { setDraft(saved); setStatus({ kind: 'idle' }); }} disabled={!dirtyKeys.size} className="rounded-full border border-[var(--line)] px-4 py-2 text-sm text-white/70 hover:text-white disabled:opacity-35">Discard</button>
         <button type="button" onClick={publish} disabled={!dirtyKeys.size || status.kind === 'saving'} className="rounded-full bg-primary-500 px-5 py-2 text-sm font-medium text-on-primary hover:bg-primary-600 disabled:opacity-40">Save &amp; publish</button>

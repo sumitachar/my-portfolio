@@ -2,6 +2,9 @@ import { applyContent, getEditableContent } from '../data/portfolio';
 import { getFirestoreApi, isFirebaseConfigured } from './firebase';
 
 const CACHE_KEY = 'site-content-v1';
+
+/** Where the content on screen came from, and when it was last published (for the editor's status line). */
+export const contentStatus = { source: 'defaults', updatedAt: null }; // source: defaults | saved | cache
 const PROJECT = import.meta.env.VITE_FIREBASE_PROJECT_ID;
 const API_KEY = import.meta.env.VITE_FIREBASE_API_KEY;
 
@@ -22,14 +25,17 @@ export async function loadContent({ timeout = 2500 } = {}) {
       return;
     }
     if (!res.ok) throw new Error(`content ${res.status}`);
-    const json = (await res.json())?.fields?.json?.stringValue;
+    const doc = await res.json();
+    const json = doc?.fields?.json?.stringValue;
     if (!json) return;
     applyContent(JSON.parse(json));
+    contentStatus.source = 'saved';
+    contentStatus.updatedAt = doc.updateTime || null;
     try { localStorage.setItem(CACHE_KEY, json); } catch { /* ignore */ }
   } catch {
     try {
       const cached = localStorage.getItem(CACHE_KEY);
-      if (cached) applyContent(JSON.parse(cached));
+      if (cached) { applyContent(JSON.parse(cached)); contentStatus.source = 'cache'; }
     } catch { /* ignore */ }
   } finally {
     clearTimeout(timer);
@@ -43,6 +49,8 @@ export async function saveContent(content) {
   const { db, fs } = await getFirestoreApi();
   await fs.setDoc(fs.doc(db, 'content', 'site'), { json, updatedAt: fs.serverTimestamp() });
   applyContent(content);
+  contentStatus.source = 'saved';
+  contentStatus.updatedAt = new Date().toISOString();
   try { localStorage.setItem(CACHE_KEY, json); } catch { /* ignore */ }
 }
 
